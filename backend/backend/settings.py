@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'users',
     'pets',
     'matching',
-    'chat',
+    'chats',
 ]
 
 MIDDLEWARE = [
