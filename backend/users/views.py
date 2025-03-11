@@ -104,6 +104,10 @@ def get_premium_status(request):
     user_profile = UserProfile.objects.filter(user=user).first()
     if not user_profile:
         return JsonResponse({'error': 'UserProfile not found'}, status=404)
+    
+    if user_profile.is_premium_active == False:
+        user_profile.is_premium = False
+        user_profile.save()
 
     return JsonResponse({
         'is_premium': user_profile.is_premium_active,
