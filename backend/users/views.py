@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from datetime import datetime, timedelta
+from django.utils import timezone
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
 from .models import UserProfile
 from django.views.decorators.csrf import csrf_exempt
 from django.middleware.csrf import get_token
@@ -56,3 +58,56 @@ def user_exit(request):
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+    
+def change_premium_status(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        user_id = data.get('user_id')
+
+        user = User.objects.filter(id=user_id).first()
+        if not user:
+            return JsonResponse({'error': 'User not found'}, status=404)
+        
+        user_profile = UserProfile.objects.filter(user=user).first()
+        if not user_profile:
+            return JsonResponse({'error': 'UserProfile not found'}, status=404)
+        
+        if user_profile.is_premium_active:
+            user_profile.is_premium = False
+            user_profile.premium_start_date = None
+            user_profile.premium_end_date = None
+        else:
+            now_utc = timezone.now()  # UTC-время
+            user_profile.is_premium = True
+            user_profile.premium_start_date = now_utc  # Начало подписки в UTC
+            user_profile.premium_end_date = now_utc + timedelta(days=30)
+
+        user_profile.save()
+
+        return JsonResponse({
+            'success': True,
+            'is_premium': user_profile.is_premium_active,
+            'premium_start_date': user_profile.premium_start_date,
+            'premium_end_date': user_profile.premium_end_date
+        })
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def get_premium_status(request):
+    data = json.loads(request.body)
+    user_id = data.get('user_id')
+    user = User.objects.filter(id=user_id).first()
+
+    if not user:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+    user_profile = UserProfile.objects.filter(user=user).first()
+    if not user_profile:
+        return JsonResponse({'error': 'UserProfile not found'}, status=404)
+
+    return JsonResponse({
+        'is_premium': user_profile.is_premium_active,
+        'premium_start_date': user_profile.premium_start_date,
+        'premium_end_date': user_profile.premium_end_date
+    })
+   
