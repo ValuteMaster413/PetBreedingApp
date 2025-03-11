@@ -6,15 +6,14 @@ from django.utils import timezone
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    is_premium = models.BooleanField(default=False)  # Флаг подписки
-    premium_start_date = models.DateTimeField(null=True, blank=True)  # Дата начала подписки
-    premium_end_date = models.DateTimeField(null=True, blank=True)  # Дата окончания подписки
+    is_premium = models.BooleanField(default=False)
+    premium_start_date = models.DateTimeField(null=True, blank=True)
+    premium_end_date = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     @property
     def is_premium_active(self):
-        """ Проверяет, активна ли подписка на данный момент """
         if self.is_premium and self.premium_end_date:
             return self.premium_end_date >= timezone.now()
         return False
