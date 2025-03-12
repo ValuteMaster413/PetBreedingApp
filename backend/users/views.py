@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import UserProfile
+from .models import UserProfile, Review
 from django.views.decorators.csrf import csrf_exempt
 from django.middleware.csrf import get_token
 from django.http import JsonResponse
@@ -26,6 +26,7 @@ def login_page(request):
         
         if user is not None:
             login(request, user)
+            print(user.id)
             return JsonResponse({'success': True})
         else:
             return JsonResponse({'error': 'Invalid credentials'}, status=400)
@@ -91,9 +92,6 @@ def user_edit(request, user_id):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
         
-
-
-    
 def change_premium_status(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -137,6 +135,7 @@ def get_premium_status(request):
         return JsonResponse({'error': 'User not found'}, status=404)
 
     user_profile = UserProfile.objects.filter(user=user).first()
+    
     if not user_profile:
         return JsonResponse({'error': 'UserProfile not found'}, status=404)
     
@@ -149,4 +148,54 @@ def get_premium_status(request):
         'premium_start_date': user_profile.premium_start_date,
         'premium_end_date': user_profile.premium_end_date
     })
-   
+
+def create_review(request, user_id):
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'User not authenticated'}, status=401)
+
+        data = json.loads(request.body)
+        rating = data.get('rating')
+        comment = data.get('comment')
+
+        review = Review.objects.create(reviewer=request.user, reviewee=User.objects.filter(id=user_id).first(), rating=rating, comment=comment)
+        review.save()
+
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+    
+def edit_review(request, review_id):
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'User not authenticated'}, status=401)
+
+        data = json.loads(request.body)
+        rating = data.get('rating')
+        comment = data.get('comment')
+
+        review = get_object_or_404(Review, id=review_id)
+
+        review.rating=rating
+        review.comment=comment
+
+        review.save()
+        
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+    
+def delete_review(request, review_id):
+    if request.method == "DELETE":
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'User not authenticated'}, status=401)
+
+        review = get_object_or_404(Review, id=review_id)
+        
+        review.delete()
+        
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
