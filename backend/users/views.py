@@ -77,9 +77,9 @@ def change_premium_status(request):
             user_profile.premium_start_date = None
             user_profile.premium_end_date = None
         else:
-            now_utc = timezone.now()  # UTC-время
+            now_utc = timezone.now()
             user_profile.is_premium = True
-            user_profile.premium_start_date = now_utc  # Начало подписки в UTC
+            user_profile.premium_start_date = now_utc
             user_profile.premium_end_date = now_utc + timedelta(days=30)
 
         user_profile.save()
