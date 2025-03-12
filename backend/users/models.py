@@ -6,6 +6,7 @@ from django.utils import timezone
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone = models.TextField()
     is_premium = models.BooleanField(default=False)
     premium_start_date = models.DateTimeField(null=True, blank=True)
     premium_end_date = models.DateTimeField(null=True, blank=True)

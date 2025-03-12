@@ -38,14 +38,15 @@ def registration_page(request):
         username = data.get('username')
         password = data.get('password')
         email = data.get('email')
-        
+        phone = data.get('phone')
+
         if User.objects.filter(username=username).exists():
             return JsonResponse({'error': 'Username already exists'}, status=400)
         
         user = User.objects.create_user(username=username, password=password, email=email)
         user.save()
         
-        user_profile = UserProfile.objects.create(user=user)
+        user_profile = UserProfile.objects.create(user=user, phone=phone)
         user_profile.save()
 
         return JsonResponse({'success': True})
@@ -58,6 +59,40 @@ def user_exit(request):
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+    
+def user_edit(request, user_id):
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'User not authenticated'}, status=401)
+        
+        data = json.loads(request.body)
+        username = data.get('username')
+        password = data.get('password')
+        email = data.get('email')
+        phone = data.get('phone')
+
+        user = get_object_or_404(User, id=user_id)
+
+        if (User.objects.filter(username=username).exists()) and (user.username != username):
+            return JsonResponse({'error': 'Username already exists'}, status=400)
+
+        user.username=username
+        user.password=password
+        user.email=email
+        
+        user.save()
+
+        user_profile = get_object_or_404(UserProfile, user=user)
+        user_profile.phone=phone
+
+        user_profile.save()
+
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+        
+
+
     
 def change_premium_status(request):
     if request.method == "POST":
