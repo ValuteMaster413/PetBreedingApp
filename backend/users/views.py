@@ -101,8 +101,9 @@ def user_info(request):
 
         user_info= [
             {
+                "user_id": request.user.id,
                 "username": request.user.username,
-                "email": request.user.username,
+                "email": request.user.email,
                 "phone": user_profile.phone,
                 "is_premium": user_profile. is_premium,
                 "premium_start_date": user_profile.premium_start_date,
