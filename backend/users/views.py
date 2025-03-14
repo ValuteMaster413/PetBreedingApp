@@ -91,6 +91,28 @@ def user_edit(request, user_id):
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def user_info(request):
+    if request.method == "GET":
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'User not authenticated'}, status=401)
+        
+        user_profile = get_object_or_404(UserProfile, user=request.user)
+
+        user_info= [
+            {
+                "username": request.user.username,
+                "email": request.user.username,
+                "phone": user_profile.phone,
+                "is_premium": user_profile. is_premium,
+                "premium_start_date": user_profile.premium_start_date,
+                "premium_end_date": user_profile.premium_end_date,
+            } 
+        ]
+
+        return JsonResponse({"chats": user_info})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
         
 def change_premium_status(request):
     if request.method == "POST":
