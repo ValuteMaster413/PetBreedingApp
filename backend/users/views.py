@@ -9,6 +9,7 @@ from django.middleware.csrf import get_token
 from django.http import JsonResponse
 import json
 
+
 def get_csrf_token(request):
     if request.method == "GET":
         csrf_token = get_token(request)
@@ -16,14 +17,15 @@ def get_csrf_token(request):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
-def login_page(request): 
+
+def login_page(request):
     if request.method == "POST":
         data = json.loads(request.body)
         username = data.get('username')
         password = data.get('password')
-        
+
         user = authenticate(username=username, password=password)
-        
+
         if user is not None:
             login(request, user)
             print(user.id)
@@ -33,7 +35,8 @@ def login_page(request):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
-def registration_page(request): 
+
+def registration_page(request):
     if request.method == "POST":
         data = json.loads(request.body)
         username = data.get('username')
@@ -43,10 +46,10 @@ def registration_page(request):
 
         if User.objects.filter(username=username).exists():
             return JsonResponse({'error': 'Username already exists'}, status=400)
-        
+
         user = User.objects.create_user(username=username, password=password, email=email)
         user.save()
-        
+
         user_profile = UserProfile.objects.create(user=user, phone=phone)
         user_profile.save()
 
@@ -54,18 +57,20 @@ def registration_page(request):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+
 def user_exit(request):
     if request.method == "POST":
         logout(request)
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
-    
+
+
 def user_edit(request, user_id):
     if request.method == "POST":
         if not request.user.is_authenticated:
             return JsonResponse({'error': 'User not authenticated'}, status=401)
-        
+
         data = json.loads(request.body)
         username = data.get('username')
         password = data.get('password')
@@ -77,44 +82,49 @@ def user_edit(request, user_id):
         if (User.objects.filter(username=username).exists()) and (user.username != username):
             return JsonResponse({'error': 'Username already exists'}, status=400)
 
-        user.username=username
-        user.password=password
-        user.email=email
-        
+        user.username = username
+        user.email = email
+
+        # Обновляем пароль только если он передан
+        if password and password.strip():
+            user.set_password(password)  # правильно: хэшируется и сохраняется
+        # иначе — не трогаем
+
         user.save()
 
         user_profile = get_object_or_404(UserProfile, user=user)
-        user_profile.phone=phone
-
+        user_profile.phone = phone
         user_profile.save()
 
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+
 def user_info(request):
     if request.method == "GET":
         if not request.user.is_authenticated:
             return JsonResponse({'error': 'User not authenticated'}, status=401)
-        
+
         user_profile = get_object_or_404(UserProfile, user=request.user)
 
-        user_info= [
+        user_info = [
             {
                 "user_id": request.user.id,
                 "username": request.user.username,
                 "email": request.user.email,
                 "phone": user_profile.phone,
-                "is_premium": user_profile. is_premium,
+                "is_premium": user_profile.is_premium,
                 "premium_start_date": user_profile.premium_start_date,
                 "premium_end_date": user_profile.premium_end_date,
-            } 
+            }
         ]
 
         return JsonResponse({"chats": user_info})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
-        
+
+
 def change_premium_status(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -123,11 +133,11 @@ def change_premium_status(request):
         user = User.objects.filter(id=user_id).first()
         if not user:
             return JsonResponse({'error': 'User not found'}, status=404)
-        
+
         user_profile = UserProfile.objects.filter(user=user).first()
         if not user_profile:
             return JsonResponse({'error': 'UserProfile not found'}, status=404)
-        
+
         if user_profile.is_premium_active:
             user_profile.is_premium = False
             user_profile.premium_start_date = None
@@ -149,6 +159,7 @@ def change_premium_status(request):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+
 def get_premium_status(request):
     data = json.loads(request.body)
     user_id = data.get('user_id')
@@ -158,10 +169,10 @@ def get_premium_status(request):
         return JsonResponse({'error': 'User not found'}, status=404)
 
     user_profile = UserProfile.objects.filter(user=user).first()
-    
+
     if not user_profile:
         return JsonResponse({'error': 'UserProfile not found'}, status=404)
-    
+
     if user_profile.is_premium_active == False:
         user_profile.is_premium = False
         user_profile.save()
@@ -172,6 +183,7 @@ def get_premium_status(request):
         'premium_end_date': user_profile.premium_end_date
     })
 
+
 def create_review(request, user_id):
     if request.method == "POST":
         if not request.user.is_authenticated:
@@ -181,13 +193,15 @@ def create_review(request, user_id):
         rating = data.get('rating')
         comment = data.get('comment')
 
-        review = Review.objects.create(reviewer=request.user, reviewee=User.objects.filter(id=user_id).first(), rating=rating, comment=comment)
+        review = Review.objects.create(reviewer=request.user, reviewee=User.objects.filter(id=user_id).first(),
+                                       rating=rating, comment=comment)
         review.save()
 
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
-    
+
+
 def edit_review(request, review_id):
     if request.method == "POST":
         if not request.user.is_authenticated:
@@ -199,26 +213,25 @@ def edit_review(request, review_id):
 
         review = get_object_or_404(Review, id=review_id)
 
-        review.rating=rating
-        review.comment=comment
+        review.rating = rating
+        review.comment = comment
 
         review.save()
-        
+
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
-    
+
+
 def delete_review(request, review_id):
     if request.method == "DELETE":
         if not request.user.is_authenticated:
             return JsonResponse({'error': 'User not authenticated'}, status=401)
 
         review = get_object_or_404(Review, id=review_id)
-        
+
         review.delete()
-        
+
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
-
-
