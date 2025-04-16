@@ -1,21 +1,38 @@
 import { createContext, useState, useEffect } from "react";
-import { loginUser, logoutUser, registerUser, getCsrfToken } from "../api/authService";
+import { loginUser, logoutUser, registerUser, getCsrfToken, getUserInfo } from "../api/authService";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(() => {
+        // Загружаем пользователя из локального хранилища при первом рендере
+        const savedUser = localStorage.getItem("user");
+        return savedUser ? JSON.parse(savedUser) : null;
+    });
     const [csrfToken, setCsrfToken] = useState("");
 
     useEffect(() => {
         getCsrfToken().then(setCsrfToken);
+        fetchUserInfo();
     }, []);
+
+    const fetchUserInfo = async () => {
+        try {
+            const data = await getUserInfo();
+            setUser(data);
+            localStorage.setItem("user", JSON.stringify(data)); // Сохраняем в localStorage
+        } catch (error) {
+            console.error("Ошибка загрузки данных пользователя:", error);
+            setUser(null);
+            localStorage.removeItem("user"); // Удаляем из localStorage в случае ошибки
+        }
+    };
 
     const signIn = async (username, password) => {
         try {
             const response = await loginUser({ username, password });
             if (response.success) {
-                setUser({ username });
+                await fetchUserInfo(); // Загружаем профиль после входа
             }
         } catch (error) {
             console.error("Ошибка входа:", error);
@@ -38,6 +55,7 @@ export const AuthProvider = ({ children }) => {
             const response = await logoutUser();
             if (response.success) {
                 setUser(null);
+                localStorage.removeItem("user"); // Удаляем данные пользователя
             }
         } catch (error) {
             console.error("Ошибка выхода:", error);

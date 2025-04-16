@@ -5,11 +5,22 @@ const API_URL = "http://localhost:8000/users";
 // Функция получения CSRF-токена
 export const getCsrfToken = async () => {
     try {
-        const response = await axios.get(`${API_URL}/csrf/`, { withCredentials: true });
+        const response = await axios.get(`${API_URL}/csrf-token/`, { withCredentials: true });
         return response.data.csrfToken;
     } catch (error) {
         console.error("Ошибка получения CSRF-токена", error);
         return null;
+    }
+};
+
+// Функция получения данных профиля пользователя
+export const getUserInfo = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/user_info/`, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        console.error("Ошибка при загрузке профиля:", error);
+        return null; // Возвращаем null в случае ошибки
     }
 };
 
