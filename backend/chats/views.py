@@ -10,7 +10,6 @@ from django.http import JsonResponse
 import json
 from django.db.models import Q
 
-
 def all_chats(request):
     if request.method == "GET":
         if not request.user.is_authenticated:
@@ -30,7 +29,6 @@ def all_chats(request):
         return JsonResponse({"chats": chat_list})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
-
 
 def create_chat(request, user_id):
     if request.method == "POST":
@@ -117,7 +115,7 @@ def edit_message(request, message_id):
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 def delete_message(request, message_id):
-    if request.method == "POST":
+    if request.method == "DELETE":
         if not request.user.is_authenticated:
             return JsonResponse({'error': 'User not authenticated'}, status=401)
         
