@@ -85,10 +85,8 @@ def user_edit(request, user_id):
         user.username = username
         user.email = email
 
-        # Обновляем пароль только если он передан
         if password and password.strip():
-            user.set_password(password)  # правильно: хэшируется и сохраняется
-        # иначе — не трогаем
+            user.set_password(password)
 
         user.save()
 

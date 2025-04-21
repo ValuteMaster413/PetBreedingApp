@@ -49,8 +49,8 @@ def edit_pet(request, pet_id):
             return JsonResponse({'error': 'User not authenticated'}, status=401)
         
         pet = get_object_or_404(Pet, id=pet_id)
-
-        data = request.POST
+        
+        data = json.loads(request.body)
         files = request.FILES.getlist('photos')
 
         pet.species = data.get('species')
@@ -116,6 +116,7 @@ def get_pet(request, pet_id):
         photos = [photo.image.url for photo in pet.photo_set.all()]
 
         report_data = {
+            'id': pet.id,
             'species': pet.species, 
             'gender': pet.gender, 
             'breed': pet.breed, 
