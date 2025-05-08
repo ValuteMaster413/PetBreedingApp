@@ -5,6 +5,7 @@ import RegisterForm from "./components/Auth/RegisterForm";
 import PrivateRoute from "./routes/PrivateRoute";
 import Profile from "./pages/Profile";
 
+
 const App = () => (
     <AuthProvider>
       <Router>
@@ -12,6 +13,8 @@ const App = () => (
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+
+
         </Routes>
       </Router>
     </AuthProvider>
