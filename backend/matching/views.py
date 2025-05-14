@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from .models import Pet
+from pets.models import Pet
 
 def find_matches(request, pet_id):
     pet = get_object_or_404(Pet, id=pet_id)
