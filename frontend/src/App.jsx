@@ -3,8 +3,8 @@ import { AuthProvider } from "./store/AuthContext";
 import LoginForm from "./components/Auth/LoginForm";
 import RegisterForm from "./components/Auth/RegisterForm";
 import PrivateRoute from "./routes/PrivateRoute";
-import Profile from "./pages/Profile";
-
+import Profile from "./components/Profile/Profile";
+import MatchSwiper from "./pages/MatchSwiper";
 
 const App = () => (
     <AuthProvider>
@@ -13,6 +13,8 @@ const App = () => (
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+            <Route path="/match/:pet_id" element={<MatchSwiper />} />
+
 
 
         </Routes>
