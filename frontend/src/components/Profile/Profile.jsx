@@ -8,8 +8,7 @@ import "./Profile.css";
 
 
 import PetCard from "./PetCard";
-
-
+import PhotoGallery from "./PhotoGallery";
 import ProfileEditor from "./ProfileEditor";
 import Modal from "./Modal";
 import PetForm from "./PetForm";
@@ -263,47 +262,41 @@ const Profile = () => {
                 <p><strong>Email:</strong> {profile.email}</p>
                 <p><strong>Телефон:</strong> {profile.phone}</p>
                 <p><strong>Premium:</strong> {profile.is_premium ? "Активний" : "Не активний"}</p>
-                <button className="profile-button btn-blue">Редагувати</button>
-                <button className="profile-button btn-red">Вийти</button>
+                <button
+                    className="profile-button btn-blue"
+                    onClick={() => setIsEditing(true)}
+                >
+                    Редагувати
+                </button>
+
+                <button
+                    className="profile-button btn-red"
+                    onClick={handleLogout}
+                >
+                    Вийти
+                </button>
             </div>
 
             {isEditing && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-white p-6 rounded-lg w-full max-w-md">
-                        <h2 className="text-xl font-bold mb-4">Редагування профілю</h2>
-                        {["username", "email", "phone"].map(field => (
-                            <input
-                                key={field}
-                                type="text"
-                                placeholder={field}
-                                value={editData[field]}
-                                onChange={e => setEditData({...editData, [field]: e.target.value})}
-                                className="w-full p-2 border mb-2 rounded"
-                            />
-                        ))}
-                        <input
-                            type="password"
-                            placeholder="Новий пароль"
-                            value={editData.password}
-                            onChange={e => setEditData({...editData, password: e.target.value})}
-                            className="w-full p-2 border mb-1 rounded"
-                        />
-                        <small className="text-gray-500 block mb-4">Залиште порожнім, якщо не хочете змінювати
-                            пароль</small>
-                        <div className="flex justify-between">
-                            <button onClick={handleEdit}
-                                    className="bg-green-500 text-white px-4 py-2 rounded">Зберегти
-                            </button>
-                            <button onClick={() => setIsEditing(false)}
-                                    className="bg-gray-500 text-white px-4 py-2 rounded">Скасувати
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <ProfileEditor
+                    editData={editData}
+                    setEditData={setEditData}
+                    onSave={handleEdit}
+                    onCancel={() => setIsEditing(false)}
+                    errorMessage={error}
+                    successMessage={successMessage}
+                />
             )}
 
             <div className="mt-6 w-full max-w-md">
                 <h3 className="text-lg font-semibold mb-2">Ваші тварини</h3>
+                <button
+                    onClick={() => setIsCreating(true)}
+                    className="bg-green-500 text-white py-1.5 px-3 text-sm rounded hover:bg-green-600"
+                >
+                    ➕ Додати тварину
+                </button>
+
                 {pets.length === 0 ? (
                     <p className="text-gray-500">Ви поки що не додали жодної тварини 🐾</p>
                 ) : (
@@ -329,12 +322,7 @@ const Profile = () => {
                         ))}
                     </div>
                 )}
-                <button
-                    onClick={() => setIsCreating(true)}
-                    className="mt-4 w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
-                >
-                    ➕ Додати тварину
-                </button>
+
             </div>
 
             {isCreating && (

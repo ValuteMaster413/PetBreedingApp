@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import "./PetCard.css";
+import PhotoGallery from "./PhotoGallery";
+import PhotoViewer from "./PhotoViewer";
+import PhotoPreviewGrid from "./PhotoPreviewGrid";
 
-const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
+
+
+const PetCard = ({pet, onEdit, onDelete, onMatch}) => {
+    const [openPreview, setOpenPreview] = useState(false);
     return (
         <div className="pet-card">
             <p><strong>Вид:</strong> {pet.species}</p>
@@ -12,17 +18,36 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
             <p><strong>Вік:</strong> {pet.age} міс.</p>
 
             {pet.photos?.length > 0 && (
-                <div className="pet-photos">
-                    {pet.photos.map((photo, i) => (
+                <>
+                    <div className="pet-photo-preview" style={{position: "relative"}}>
                         <img
-                            key={i}
-                            src={`http://localhost:8000${photo.url}`}
-                            alt="pet"
+                            src={`http://localhost:8000${pet.photos[0].url}`}
+                            alt="preview"
                             className="pet-photo"
+                            onClick={() => setOpenPreview(true)}
+                            style={{
+                                cursor: "pointer",
+                                borderRadius: "0.5rem",
+                                boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+                                width: "100%"
+                            }}
                         />
-                    ))}
-                </div>
+                        {pet.photos.length > 1 && (
+                            <div className="photo-count-overlay">
+                                +{pet.photos.length - 1}
+                            </div>
+                        )}
+                    </div>
+
+                    {openPreview && (
+                        <PhotoPreviewGrid
+                            photos={pet.photos}
+                            onClose={() => setOpenPreview(false)}
+                        />
+                    )}
+                </>
             )}
+
 
             <div className="pet-buttons">
                 <button className="btn-delete" onClick={onDelete}>🗑 Видалити</button>

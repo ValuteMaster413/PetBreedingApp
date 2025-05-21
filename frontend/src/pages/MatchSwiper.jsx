@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 const MatchSwiper = () => {
-    const {pet_id = 9} = useParams(); // <--- вот так
+    const {pet_id} = useParams();
     const [matches, setMatches] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [error, setError] = useState(null);
