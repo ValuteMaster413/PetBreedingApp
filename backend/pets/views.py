@@ -94,6 +94,7 @@ def all_pets(request):
         pets = Pet.objects.filter(owner=request.user)
 
         pets_list = [{
+            'id': pet.id,
             'species': pet.species, 
             'gender': pet.gender, 
             'breed': pet.breed, 
