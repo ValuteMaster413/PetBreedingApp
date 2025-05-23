@@ -24,6 +24,7 @@ def find_matches(request, pet_id):
 
     results = [{
         "id": match.id,
+        "coat_color": match.coat_color,
         "species": match.species,
         "gender": match.gender,
         "breed": match.breed,
