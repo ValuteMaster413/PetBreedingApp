@@ -21,8 +21,7 @@ const PetForm = ({ initialPet, initialPhotos, formErrors, onSave, onCancel, titl
     return (
         <div className="pet-form">
             <h2 className="form-title">{title || "Нова тварина"}</h2>
-
-            {["species", "gender", "breed", "coat_color", "age", "price"].map((field) => (
+            {["species", "breed", "coat_color", "age", "price"].map((field) => (
                 <div className="form-group" key={field}>
                     <input
                         type="text"
@@ -37,6 +36,22 @@ const PetForm = ({ initialPet, initialPhotos, formErrors, onSave, onCancel, titl
                     )}
                 </div>
             ))}
+
+            <div className="form-group">
+                <select
+                    name="gender"
+                    value={petData.gender || ""}
+                    onChange={handleChange}
+                    className="form-input"
+                >
+                    <option value="">Оберіть стать</option>
+                    <option value="male">Самець</option>
+                    <option value="female">Самка</option>
+                </select>
+                {formErrors?.gender && <p className="form-error">{formErrors.gender}]</p>}
+            </div>
+
+
 
             <input
                 type="file"
