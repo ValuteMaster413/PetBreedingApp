@@ -5,6 +5,7 @@ import RegisterForm from "./components/Auth/RegisterForm";
 import PrivateRoute from "./routes/PrivateRoute";
 import Profile from "./components/Profile/Profile";
 import MatchSwiper from "./pages/MatchSwiper";
+import PetProfile from "./pages/PetProfile";
 
 const App = () => (
     <AuthProvider>
@@ -15,6 +16,7 @@ const App = () => (
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
             <Route path="/match/:pet_id" element={<MatchSwiper />} />
 
+          <Route path="/pets/:petId" element={<PetProfile />} />
 
 
         </Routes>

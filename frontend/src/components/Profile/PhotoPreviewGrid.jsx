@@ -13,7 +13,7 @@ const PhotoPreviewGrid = ({ photos, onClose }) => {
                     {photos.map((photo, i) => (
                         <img
                             key={i}
-                            src={`http://localhost:8000${photo.url}`}
+                            src={`http://localhost:8000${typeof photo === "string" ? photo : photo.url}`}
                             alt={`thumb-${i}`}
                             className="preview-thumb"
                             onClick={() => setViewerIndex(i)}

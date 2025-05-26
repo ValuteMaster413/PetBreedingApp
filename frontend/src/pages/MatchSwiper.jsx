@@ -1,12 +1,16 @@
 import {useEffect, useState} from "react";
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 import axios from "axios";
+import {sendLike, checkSympathy} from "../api/likeService";
+import SympathyModal from "../components/matches/SympathyModal";
+import {getCsrfToken} from "../api/authService";
 
 const MatchSwiper = () => {
     const {pet_id} = useParams();
     const [matches, setMatches] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [error, setError] = useState(null);
+    const [matchMessage, setMatchMessage] = useState("");
 
     useEffect(() => {
         const fetchMatches = async () => {
@@ -18,18 +22,58 @@ const MatchSwiper = () => {
                 setError("Не вдалося отримати список підходящих тварин.");
             }
         };
-
         fetchMatches();
     }, [pet_id]);
 
-    const handleLike = () => {
-        setCurrentIndex((prev) => prev + 1);
-        // можно добавить запрос на отметку "лайк" или "свайп"
+    const handleLike = async () => {
+        try {
+            const csrf = await getCsrfToken();
+
+            await axios.post(
+                `http://localhost:8000/matching/like/${pet_id}/${match.id}/`,
+                {},
+                {
+                    headers: { "X-CSRFToken": csrf },
+                    withCredentials: true
+                }
+            );
+
+            const res = await axios.get(
+                `http://localhost:8000/matching/sympathys/${pet_id}/`,
+                { withCredentials: true }
+            );
+
+            const mutual = res.data.sympathys.find(sym =>
+                (sym.pet1 === Number(pet_id) && sym.pet2 === match.id) ||
+                (sym.pet2 === Number(pet_id) && sym.pet1 === match.id)
+            );
+            console.log("🎯 Взаємна симпатія знайдена:", mutual);
+
+            if (mutual) {
+                const petInfoRes = await axios.get(
+                    `http://localhost:8000/pets/get_pet/${match.id}/`,
+                    { withCredentials: true }
+                );
+                console.log("📦 Дані для модалки:", petInfoRes.data.report);
+                setSympathyPetData(petInfoRes.data.report);
+                setShowSympathyModal(true);
+            } else {
+                setCurrentIndex((prev) => prev + 1); // 👉 только если нет взаимности
+            }
+
+        } catch (e) {
+            console.error("Помилка при обробці лайку або симпатії:", e);
+            setCurrentIndex((prev) => prev + 1); // 👉 при ошибке всё же сдвигаем
+        }
     };
 
     const handleSkip = () => {
+        setMatchMessage("");
         setCurrentIndex((prev) => prev + 1);
     };
+
+    const [showSympathyModal, setShowSympathyModal] = useState(false);
+    const [sympathyPetData, setSympathyPetData] = useState(null);
 
     if (error) return <p className="text-red-500 text-center">{error}</p>;
     if (matches.length === 0) return <p className="text-center">Немає доступних тварин для пошуку 😢</p>;
@@ -53,6 +97,8 @@ const MatchSwiper = () => {
                 />
             )}
 
+            {matchMessage && <p className="text-sm text-blue-500 mb-2">{matchMessage}</p>}
+
             <div className="flex gap-4 mt-4">
                 <button
                     onClick={handleSkip}
@@ -67,6 +113,12 @@ const MatchSwiper = () => {
                     ❤️ Підходить
                 </button>
             </div>
+            {showSympathyModal && (
+                <SympathyModal
+                    pet={sympathyPetData}
+                    onClose={() => setShowSympathyModal(false)}
+                />
+            )}
         </div>
     );
 };

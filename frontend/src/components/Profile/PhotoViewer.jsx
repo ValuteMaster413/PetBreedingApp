@@ -11,7 +11,8 @@ const PhotoViewer = ({ photos = [], startIndex = 0, onClose }) => {
         <div className="viewer-backdrop" onClick={onClose}>
             <div className="viewer-content" onClick={(e) => e.stopPropagation()}>
                 <img
-                    src={`http://localhost:8000${photos[index].url}` || photos[index].url}
+                    src={`http://localhost:8000${typeof photos[index] === "string" ? photos[index] : photos[index].url}`}
+
                     alt="viewer"
                     className="viewer-image"
                 />
