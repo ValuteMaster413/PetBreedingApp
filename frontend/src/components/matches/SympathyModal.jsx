@@ -1,8 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import "./SympathyModal.css";
 
-const SympathyModal = ({ pet, onClose }) => {
+const SympathyModal = ({ pet, onClose, onNext }) => {
     const navigate = useNavigate();
 
     if (!pet) return null;
@@ -25,13 +25,13 @@ const SympathyModal = ({ pet, onClose }) => {
                     <button onClick={() => navigate(`/pets/${pet.id}`)} className="btn-modal">
                         Профіль тварини
                     </button>
-                    {/*<button onClick={() => navigate(`/owner/${pet.owner_id}`)} className="btn-modal">*/}
-                    {/*    Профіль власника*/}
-                    {/*</button>*/}
                     <button onClick={() => navigate(`/chat?to=${pet.owner_id}`)} className="btn-modal">
                         ✉ Написати повідомлення
                     </button>
-                    <button onClick={onClose} className="btn-modal-cancel">✖ Закрити</button>
+                    <button onClick={onNext} className="btn-modal-cancel">
+                        ▶ Продовжити перегляд
+                    </button>
+
                 </div>
             </div>
         </div>

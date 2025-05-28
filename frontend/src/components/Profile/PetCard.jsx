@@ -3,11 +3,14 @@ import "./PetCard.css";
 import PhotoGallery from "./PhotoGallery";
 import PhotoViewer from "./PhotoViewer";
 import PhotoPreviewGrid from "./PhotoPreviewGrid";
+import LikesModal from "./LikesModal";
 
 
 
 const PetCard = ({pet, onEdit, onDelete, onMatch}) => {
     const [openPreview, setOpenPreview] = useState(false);
+    const [showLikesModal, setShowLikesModal] = useState(false);
+
     return (
         <div className="pet-card">
             <p><strong>Вид:</strong> {pet.species}</p>
@@ -53,6 +56,12 @@ const PetCard = ({pet, onEdit, onDelete, onMatch}) => {
                 <button className="btn-delete" onClick={onDelete}>🗑 Видалити</button>
                 <button className="btn-edit" onClick={onEdit}>✏️ Редагувати</button>
                 <button className="btn-match" onClick={onMatch}>🔍 Пошук пари</button>
+                <button className="btn-likes" onClick={() => setShowLikesModal(true)}>
+                    ❤️ Хто вподобав?
+                </button>
+                {showLikesModal && (
+                    <LikesModal petId={pet.id} onClose={() => setShowLikesModal(false)} />
+                )}
             </div>
         </div>
     );

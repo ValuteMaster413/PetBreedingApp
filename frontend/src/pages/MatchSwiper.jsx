@@ -58,12 +58,12 @@ const MatchSwiper = () => {
                 setSympathyPetData(petInfoRes.data.report);
                 setShowSympathyModal(true);
             } else {
-                setCurrentIndex((prev) => prev + 1); // 👉 только если нет взаимности
+                setCurrentIndex((prev) => prev + 1);
             }
 
         } catch (e) {
             console.error("Помилка при обробці лайку або симпатії:", e);
-            setCurrentIndex((prev) => prev + 1); // 👉 при ошибке всё же сдвигаем
+            setCurrentIndex((prev) => prev + 1);
         }
     };
 
@@ -116,7 +116,10 @@ const MatchSwiper = () => {
             {showSympathyModal && (
                 <SympathyModal
                     pet={sympathyPetData}
-                    onClose={() => setShowSympathyModal(false)}
+                    onNext={() => {
+                        setShowSympathyModal(false);
+                        setCurrentIndex(prev => prev + 1);
+                    }}
                 />
             )}
         </div>
