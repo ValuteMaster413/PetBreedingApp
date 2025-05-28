@@ -22,9 +22,6 @@ def find_matches(request, pet_id):
     if pet.breed:
         matches = matches.filter(breed=pet.breed)
 
-    if pet.price:
-        matches = matches.filter(price__lte=pet.price)
-
     matches = matches.exclude(id__in=liked_pet_ids)
     matches = matches.exclude(id__in=disliked_pet_ids)
 
