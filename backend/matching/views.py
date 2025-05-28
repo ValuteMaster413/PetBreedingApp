@@ -53,6 +53,12 @@ def like(request, pet_id_like_from,pet_id_like_to):
 
         like.save()
 
+        if Like.objects.filter(petLikeFrom=pet_to, petLikeTo=pet_from).exists():
+            pet1, pet2 = sorted([pet_from.id, pet_to.id])
+            if not Sympathy.objects.filter(pet1_id=pet1, pet2_id=pet2).exists():
+                Sympathy.objects.create(pet1_id=pet1, pet2_id=pet2)
+
+
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
