@@ -86,7 +86,7 @@ def delete_pet(request, pet_id):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
     
-def all_pets(request):
+def all_my_pets(request):
     if request.method == "GET":
         if not request.user.is_authenticated:
             return JsonResponse({'error': 'User not authenticated'}, status=401)
@@ -107,6 +107,29 @@ def all_pets(request):
         return JsonResponse({'reports': pets_list})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+    
+def all_pets(request, user_id):
+    if request.method == "GET":
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'User not authenticated'}, status=401)
+        
+        pets = Pet.objects.filter(owner=User.objects.filter(id=user_id).first())
+
+        pets_list = [{
+            'id': pet.id,
+            'species': pet.species, 
+            'gender': pet.gender, 
+            'breed': pet.breed, 
+            'price': pet.price, 
+            'coat_color': pet.coat_color, 
+            'age': pet.age,
+            'photos': [photo.image.url for photo in pet.photo_set.all()]
+        } for pet in pets]
+        
+        return JsonResponse({'reports': pets_list})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
 def get_pet(request, pet_id):
     if request.method == "GET":

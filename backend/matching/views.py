@@ -1,12 +1,15 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from pets.models import Pet
-from .models import Like, Sympathy
+from .models import Like, Sympathy, Dislike
 from django.db.models import Q
 
 def find_matches(request, pet_id):
     pet = get_object_or_404(Pet, id=pet_id)
     
+    liked_pet_ids = Like.objects.filter(petLikeFrom=pet).values_list('petLikeTo__id', flat=True)
+    disliked_pet_ids = Dislike.objects.filter(petDislikeFrom=pet).values_list('petDislikeTo__id', flat=True)
+
     matches = Pet.objects.filter(species=pet.species)
 
     opposite_gender = 'male' if pet.gender == 'female' else 'female'
@@ -21,6 +24,9 @@ def find_matches(request, pet_id):
 
     if pet.price:
         matches = matches.filter(price__lte=pet.price)
+
+    matches = matches.exclude(id__in=liked_pet_ids)
+    matches = matches.exclude(id__in=disliked_pet_ids)
 
     results = [{
         "id": match.id,
@@ -75,6 +81,24 @@ def likes_from_me(request, pet_id):
         data = [{'to': like.petLikeTo.id} for like in likes]
 
         return JsonResponse({"likes_from_me": data})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+    
+def dislike(request, pet_id_dislike_from, pet_id_dislike_to):
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'User not authenticated'}, status=401)
+
+        pet_from = get_object_or_404(Pet, id=pet_id_dislike_from)
+        pet_to = get_object_or_404(Pet, id=pet_id_dislike_to)
+
+        if Dislike.objects.filter(petDislikeFrom=pet_from, petDislikeTo=pet_to).exists():
+            return JsonResponse({'success': False, 'message': 'Dislike already exists'})
+
+        dislike = Dislike.objects.create(petDislikeFrom=pet_from, petDislikeTo=pet_to)
+        dislike.save()
+
+        return JsonResponse({'success': True})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
     
