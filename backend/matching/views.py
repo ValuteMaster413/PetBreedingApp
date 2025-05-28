@@ -58,16 +58,27 @@ def like(request, pet_id_like_from,pet_id_like_to):
         return JsonResponse({'error': 'Invalid request method'}, status=405)
     
 def likes_to_me(request, pet_id):
-    if request.method == "GET":
-        if not request.user.is_authenticated:
-            return JsonResponse({'error': 'User not authenticated'}, status=401)
-        
-        likes = Like.objects.filter(petLikeTo = pet_id)
-        data = [{'from': like.petLikeFrom.id} for like in likes]
-
-        return JsonResponse({"likes_to_me": data})
-    else:
+    if request.method != "GET":
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'User not authenticated'}, status=401)
+
+    incoming_likes = Like.objects.filter(petLikeTo=pet_id)
+
+    my_likes = Like.objects.filter(petLikeFrom=pet_id).values_list('petLikeTo_id', flat=True)
+
+    my_dislikes = Dislike.objects.filter(petDislikeFrom=pet_id).values_list('petDislikeTo_id', flat=True)
+
+    mutual_likes = incoming_likes.filter(petLikeFrom__in=my_likes).values_list('petLikeFrom_id', flat=True)
+
+    filtered_likes = incoming_likes.exclude(
+        petLikeFrom__in=my_likes.union(my_dislikes).union(mutual_likes)
+    )
+
+    data = [{'from': like.petLikeFrom.id} for like in filtered_likes]
+
+    return JsonResponse({"likes_to_me": data})
     
 def likes_from_me(request, pet_id):
     if request.method == "GET":
