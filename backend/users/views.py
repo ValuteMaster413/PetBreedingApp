@@ -107,9 +107,9 @@ def my_info(request):
 
         user_info = [
             {
-                "user_id": request.user.id,
-                "username": request.user.username,
-                "email": request.user.email,
+                "user_id": user_profile.user.id,
+                "username": user_profile.user.username,
+                "email": user_profile.user.email,
                 "phone": user_profile.phone,
                 "is_premium": user_profile.is_premium,
                 "premium_start_date": user_profile.premium_start_date,
@@ -130,9 +130,9 @@ def user_info(request, user_id):
 
         user_info = [
             {
-                "user_id": request.user.id,
-                "username": request.user.username,
-                "email": request.user.email,
+                "user_id": user_profile.user.id,
+                "username": user_profile.user.username,
+                "email": user_profile.user.email,
                 "phone": user_profile.phone,
                 "is_premium": user_profile.is_premium,
                 "premium_start_date": user_profile.premium_start_date,
