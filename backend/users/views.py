@@ -255,3 +255,21 @@ def delete_review(request, review_id):
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+    
+def all_review(request, user_id):
+    if request.method == "GET":
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'User not authenticated'}, status=401)
+        
+        reviews = Review.objects.filter(reviewee=User.objects.filter(id=user_id).first())
+
+        reviews_list = [{
+            'id': review.id, 
+            'rating': review.rating, 
+            'comment': review.comment, 
+            'created_at': review.created_at, 
+        } for review in reviews]
+        
+        return JsonResponse({'reports': reviews_list})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
