@@ -22,9 +22,6 @@ def find_matches(request, pet_id):
     if pet.breed:
         matches = matches.filter(breed=pet.breed)
 
-    if pet.price:
-        matches = matches.filter(price__lte=pet.price)
-
     matches = matches.exclude(id__in=liked_pet_ids)
     matches = matches.exclude(id__in=disliked_pet_ids)
 
@@ -56,21 +53,38 @@ def like(request, pet_id_like_from,pet_id_like_to):
 
         like.save()
 
+        if Like.objects.filter(petLikeFrom=pet_to, petLikeTo=pet_from).exists():
+            pet1, pet2 = sorted([pet_from.id, pet_to.id])
+            if not Sympathy.objects.filter(pet1_id=pet1, pet2_id=pet2).exists():
+                Sympathy.objects.create(pet1_id=pet1, pet2_id=pet2)
+
+
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
     
 def likes_to_me(request, pet_id):
-    if request.method == "GET":
-        if not request.user.is_authenticated:
-            return JsonResponse({'error': 'User not authenticated'}, status=401)
-        
-        likes = Like.objects.filter(petLikeTo = pet_id)
-        data = [{'from': like.petLikeFrom.id} for like in likes]
-
-        return JsonResponse({"likes_to_me": data})
-    else:
+    if request.method != "GET":
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'User not authenticated'}, status=401)
+
+    incoming_likes = Like.objects.filter(petLikeTo=pet_id)
+
+    my_likes = Like.objects.filter(petLikeFrom=pet_id).values_list('petLikeTo_id', flat=True)
+
+    my_dislikes = Dislike.objects.filter(petDislikeFrom=pet_id).values_list('petDislikeTo_id', flat=True)
+
+    mutual_likes = incoming_likes.filter(petLikeFrom__in=my_likes).values_list('petLikeFrom_id', flat=True)
+
+    filtered_likes = incoming_likes.exclude(
+        petLikeFrom__in=my_likes.union(my_dislikes).union(mutual_likes)
+    )
+
+    data = [{'from': like.petLikeFrom.id} for like in filtered_likes]
+
+    return JsonResponse({"likes_to_me": data})
     
 def likes_from_me(request, pet_id):
     if request.method == "GET":
