@@ -16,7 +16,7 @@ export const getCsrfToken = async () => {
 // Функция получения данных профиля пользователя
 export const getUserInfo = async () => {
     try {
-        const response = await axios.get(`${API_URL}/user_info/`, { withCredentials: true });
+        const response = await axios.get(`${API_URL}/my_info/`, { withCredentials: true });
         return response.data;
     } catch (error) {
         console.error("Ошибка при загрузке профиля:", error);

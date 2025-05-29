@@ -43,7 +43,7 @@ const Profile = () => {
 
     const fetchPets = async () => {
         try {
-            const response = await axios.get("http://localhost:8000/pets/all_pets/", { withCredentials: true });
+            const response = await axios.get("http://localhost:8000/pets/all_my_pets/", { withCredentials: true });
             setPets(response.data.reports);
         } catch (e) {
             console.error("Не вдалося завантажити тварин:", e);
@@ -60,7 +60,7 @@ const Profile = () => {
         useEffect(() => {
             const fetchProfile = async () => {
                 try {
-                    const response = await axios.get("http://localhost:8000/users/user_info/", {withCredentials: true});
+                    const response = await axios.get("http://localhost:8000/users/my_info/", {withCredentials: true});
                     if (response.data.chats && Array.isArray(response.data.chats) && response.data.chats.length > 0) {
                         setProfile(response.data.chats[0]); // Берем первый элемент массива
                         setEditData({

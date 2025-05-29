@@ -44,7 +44,15 @@ const PetProfile = () => {
             <p><strong>Колір шерсті:</strong> {pet.coat_color || "Невідомо"}</p>
             <p><strong>Ціна:</strong> {pet.price || "Безкоштовно"}</p>
             <p><strong>Вік:</strong> {pet.age} міс.</p>
-
+            <p>
+                <strong>Власник:</strong>{" "}
+                <a
+                    href={`/user/${pet.owner_id}`}
+                    className="text-blue-600 underline hover:text-blue-800"
+                >
+                    Переглянути профіль власника
+                </a>
+            </p>
             {pet.photos?.length > 0 && (
                 <div
                     className="mt-4 cursor-pointer relative"

@@ -4,6 +4,7 @@
     border-radius: 0.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
+    border: 3px solid rgba(0, 0, 0, 0.10);
 }
 
 .pet-photos {
@@ -51,10 +52,25 @@
     cursor: pointer;
     font-size: 0.9rem;
 }
+
 .btn-likes {
     color: #7c3aed;
     background: none;
     border: none;
     cursor: pointer;
     font-size: 0.9rem;
+}
+
+.likes-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: orange;
+    color: white;
+    font-weight: bold;
+    border-radius: 9999px;
+    padding: 2px 6px;
+    font-size: 12px;
+    z-index: 10;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }

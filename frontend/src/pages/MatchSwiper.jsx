@@ -71,7 +71,24 @@ const MatchSwiper = () => {
         setMatchMessage("");
         setCurrentIndex((prev) => prev + 1);
     };
+    const handleDislike = async () => {
+        try {
+            const csrf = await getCsrfToken();
 
+            await axios.post(
+                `http://localhost:8000/matching/match/${pet_id}/dislike/${match.id}/`,
+                {},
+                {
+                    headers: { "X-CSRFToken": csrf },
+                    withCredentials: true
+                }
+            );
+        } catch (e) {
+            console.error("Помилка при дизлайку:", e);
+        } finally {
+            setCurrentIndex(prev => prev + 1);
+        }
+    };
     const [showSympathyModal, setShowSympathyModal] = useState(false);
     const [sympathyPetData, setSympathyPetData] = useState(null);
 
@@ -100,6 +117,12 @@ const MatchSwiper = () => {
             {matchMessage && <p className="text-sm text-blue-500 mb-2">{matchMessage}</p>}
 
             <div className="flex gap-4 mt-4">
+                <button
+                    onClick={handleDislike}
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                >
+                    👎 Нецікаво
+                </button>
                 <button
                     onClick={handleSkip}
                     className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
