@@ -4,6 +4,7 @@ import axios from "axios";
 import "./Profile.css";
 import "./OtherProfile.css";
 import PhotoPreviewGrid from "./PhotoPreviewGrid";
+import ReviewsModal from "./ReviewsModal";
 
 const OtherProfile = () => {
     const { userId } = useParams();
@@ -11,6 +12,8 @@ const OtherProfile = () => {
     const [pets, setPets] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showReviews, setShowReviews] = useState(false);
+
 
     useEffect(() => {
         axios.get(`http://localhost:8000/users/user_info/${userId}/`, { withCredentials: true })
@@ -51,17 +54,24 @@ const OtherProfile = () => {
                     </button>
                     <button
                         className="btn-modal-small"
-                        onClick={() => alert("Перегляд відгуків недоступний (плейсхолдер)")}
+                        onClick={() => setShowReviews(true)}
                     >
                         ★ Переглянути відгуки
                     </button>
-                    <div className="centered-feedback-button">
-                        <button className="btn-feedback" onClick={() => alert("Залишити відгук (плейсхолдер)")}>
-                            Залишити відгук
-                        </button>
-                    </div>
+
+                </div>
+                <div className="centered-feedback-button">
+                    <button className="btn-feedback" onClick={() => alert("Залишити відгук (плейсхолдер)")}>
+                        Залишити відгук
+                    </button>
                 </div>
             </div>
+            {showReviews && (
+                <ReviewsModal
+                    userId={userId}
+                    onClose={() => setShowReviews(false)}
+                />
+            )}
 
             <div className="mt-6 w-full max-w-md">
                 <h3 className="text-lg font-semibold mb-2">Tварини {profile.username}</h3>
