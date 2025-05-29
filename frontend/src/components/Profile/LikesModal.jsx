@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import "./LikesModal.css";
 import PhotoPreviewGrid from "./PhotoPreviewGrid";
+import {getCsrfToken} from "../../api/authService";
 
-const LikesModal = ({ petId, onClose }) => {
+const LikesModal = ({ petId, onClose, onDislike }) => {
+
     const [likes, setLikes] = useState([]);
     const [error, setError] = useState(null);
-    const [ignored, setIgnored] = useState([]);
+    const [ignoredIds, setIgnoredIds] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/matching/likes_to_me/${petId}/`, { withCredentials: true })
+        axios.get(`http://localhost:8000/matching/likes_to_me/${petId}/`, {withCredentials: true})
             .then(res => setLikes(res.data.likes_to_me))
             .catch(err => {
                 console.error("Помилка при завантаженні лайків", err);
@@ -19,12 +21,12 @@ const LikesModal = ({ petId, onClose }) => {
 
     const handleLikeBack = async (likedPetId) => {
         try {
+            const csrf = await getCsrfToken();
+
             await axios.post(`http://localhost:8000/matching/like/${petId}/${likedPetId}/`, {}, {
                 withCredentials: true,
                 headers: {
-                    "X-CSRFToken": await (await fetch('http://localhost:8000/api/csrf/', {
-                        credentials: 'include'
-                    })).text()
+                    "X-CSRFToken": csrf
                 }
             });
             alert("Ви вподобали у відповідь!");
@@ -34,10 +36,15 @@ const LikesModal = ({ petId, onClose }) => {
     };
 
     const handleIgnore = (id) => {
-        setIgnored(prev => [...prev, id]);
+        setIgnoredIds(prev => [...prev, id]);
+        setLikes(prev => prev.filter(like => like.from !== id));
+        onDislike?.(); // якщо передано
     };
 
-    const visibleLikes = likes.filter(like => !ignored.includes(like.from));
+
+
+
+const visibleLikes = likes.filter(like => !ignoredIds.includes(like.from));
 
     return (
         <div className="modal-backdrop" onClick={onClose}>
@@ -47,7 +54,14 @@ const LikesModal = ({ petId, onClose }) => {
                 {visibleLikes.length === 0 && <p>Немає нових вподобань</p>}
 
                 {visibleLikes.map((like, idx) => (
-                    <LikeEntry key={idx} petId={like.from} onLikeBack={handleLikeBack} onIgnore={handleIgnore} />
+                    <LikeEntry
+                        key={idx}
+                        petId={like.from}
+                        viewerPetId={petId}
+                        onLikeBack={handleLikeBack}
+                        onIgnore={handleIgnore}
+                    />
+
                 ))}
 
                 <button className="btn-modal-cancel" onClick={onClose}>Закрити</button>
@@ -56,17 +70,40 @@ const LikesModal = ({ petId, onClose }) => {
     );
 };
 
-const LikeEntry = ({ petId, onLikeBack, onIgnore }) => {
+const LikeEntry = ({ viewerPetId, petId, onLikeBack, onIgnore }) => {
     const [pet, setPet] = useState(null);
     const [openPreview, setOpenPreview] = useState(false);
+    const handleDislike = async () => {
+        try {
+            const csrf = await getCsrfToken();
+
+            const res = await axios.post(
+                `http://localhost:8000/matching/match/${viewerPetId}/dislike/${pet.id}/`,
+                {},
+                {
+                    headers: {"X-CSRFToken": csrf},
+                    withCredentials: true
+                }
+            );
+
+            if (res.data.success) {
+                onIgnore(pet.id);  // Видалити з видимих
+            } else {
+                console.warn("Dislike already exists або інша помилка:", res.data.message);
+            }
+
+        } catch (err) {
+            console.error("Помилка при дизлайку", err);
+        }
+    };
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/pets/get_pet/${petId}/`, { withCredentials: true })
+        axios.get(`http://localhost:8000/pets/get_pet/${petId}/`, {withCredentials: true})
             .then(res => {
                 const data = res.data.report;
                 const transformed = {
                     ...data,
-                    photos: data.photos.map(p => typeof p === "string" ? { url: p } : p)
+                    photos: data.photos.map(p => typeof p === "string" ? {url: p} : p)
                 };
                 setPet(transformed);
             })
@@ -78,7 +115,7 @@ const LikeEntry = ({ petId, onLikeBack, onIgnore }) => {
     return (
         <>
             <div className="like-item">
-                <div className="like-photo-block" onClick={() => setOpenPreview(true)} style={{ cursor: "pointer" }}>
+                <div className="like-photo-block" onClick={() => setOpenPreview(true)} style={{cursor: "pointer"}}>
                     {pet.photos?.length > 0 && (
                         <img
                             src={`http://localhost:8000${pet.photos[0].url}`}
@@ -93,12 +130,18 @@ const LikeEntry = ({ petId, onLikeBack, onIgnore }) => {
                     <p>Вік: {pet.age} міс.</p>
 
                     <div className="like-buttons">
-                        <button onClick={() => onLikeBack(petId)} className="btn-modal-small">❤️ Вподобати</button>
-                        <button onClick={() => onIgnore(petId)} className="btn-modal-ignore">✖ Ігнор</button>
+                        <button onClick={() => handleDislike(petId)} className="btn-modal-ignore">👎 Нецікаво</button>
+                        <button onClick={() => alert("Чат недоступний (плейсхолдер)")} className="btn-modal-small">✉
+                            Написати
+                        </button>
+                        <button onClick={() => window.location.href = `/profile/${pet.owner_id}`}
+                                className="btn-modal-small">👤 Профіль власника
+                        </button>
                     </div>
+
                 </div>
             </div>
- 
+
             {openPreview && (
                 <PhotoPreviewGrid
                     photos={pet.photos}
