@@ -6,10 +6,13 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django.setup()
 
 from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
 import chats.routing
 
 application = ProtocolTypeRouter({
-    "websocket": URLRouter(
-        chats.routing.websocket_urlpatterns
+    "websocket": AuthMiddlewareStack(
+        URLRouter(
+            chats.routing.websocket_urlpatterns
+        )
     ),
 })
