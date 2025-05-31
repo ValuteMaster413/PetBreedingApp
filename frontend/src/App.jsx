@@ -8,6 +8,8 @@ import MatchSwiper from "./pages/MatchSwiper";
 import PetProfile from "./pages/PetProfile";
 
 import OtherProfile from "./components/Profile/OtherProfile";
+import ChatList from "./components/Chats/ChatList";
+import ChatRoom from "./components/Chats/ChatRoom";
 
 const App = () => (
     <AuthProvider>
@@ -20,6 +22,8 @@ const App = () => (
 
                 <Route path="/pets/:petId" element={<PetProfile/>}/>
                 <Route path="/profile/:userId" element={<OtherProfile />} />
+                <Route path="/chats" element={<ChatList />} />
+                <Route path="/chats/:chatId" element={<ChatRoom />} />
 
 
             </Routes>
