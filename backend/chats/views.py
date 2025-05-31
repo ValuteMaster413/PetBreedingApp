@@ -79,22 +79,26 @@ def all_messages(request, chat_id):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
     
-def create_message(request, chat_id):
-    if request.method == "POST":
-        if not request.user.is_authenticated:
-            return JsonResponse({'error': 'User not authenticated'}, status=401)
-        
-        chat = get_object_or_404(Chat, id=chat_id)
-        sender = request.user
-        data = json.loads(request.body)
-        text = data.get('text')
-
-        message = Message.objects.create(chat=chat, sender=sender, text=text)
-        message.save()
-
-        return JsonResponse({'success': True})
-    else:
+def create_chat(request, user_id):
+    if request.method != "POST":
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'User not authenticated'}, status=401)
+
+    try:
+        other_user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+    user1, user2 = sorted([request.user, other_user], key=lambda u: u.id)
+
+    chat = Chat.objects.filter(user_1=user1, user_2=user2).first()
+    if chat:
+        return JsonResponse({'chat_id': chat.id, 'message': 'Chat already exists'})
+
+    chat = Chat.objects.create(user_1=user1, user_2=user2)
+    return JsonResponse({'chat_id': chat.id, 'message': 'Chat created'})
     
 def edit_message(request, message_id):
     if request.method == "POST":
