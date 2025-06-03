@@ -1,18 +1,18 @@
 import {useContext, useEffect, useState} from "react";
-import AuthContext from "../../store/AuthContext";
+import AuthContext from "../../../app/context/AuthContext";
 import axios from "axios";
-import {getCsrfToken} from "../../api/authService";
+import {getCsrfToken} from "../../../api/authService";
 import {useNavigate} from "react-router-dom";
 
 import "./Profile.css";
 
 
-import PetCard from "./PetCard";
-import PhotoGallery from "./PhotoGallery";
-import ProfileEditor from "./ProfileEditor";
-import Modal from "./Modal";
-import PetForm from "./PetForm";
-import PetEditor from "./PetEditor";
+import PetCard from "../PetCard";
+import PhotoGallery from "../PhotoGallery";
+import ProfileEditor from "../ProfileEditor";
+import Modal from "../Modal";
+import PetForm from "../PetForm";
+import PetEditor from "../PetEditor";
 
 
 const Profile = () => {

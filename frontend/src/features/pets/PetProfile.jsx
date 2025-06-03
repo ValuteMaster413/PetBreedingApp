@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import PhotoPreviewGrid from "../components/Profile/PhotoPreviewGrid";
+import PhotoPreviewGrid from "../shared/components/PhotoPreviewGrid";
 import "./PetProfile.css";
 
 const PetProfile = () => {

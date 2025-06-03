@@ -4,11 +4,11 @@ import { getCsrfToken } from "../../api/authService";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "./Profile.css";
+import "../profile/pages/Profile.css";
 import "./OtherProfile.css";
-import PhotoPreviewGrid from "./PhotoPreviewGrid";
-import ReviewsModal from "./ReviewsModal";
-import ChatButton from "../Chats/ChatButton";
+import PhotoPreviewGrid from "../shared/components/PhotoPreviewGrid";
+import ReviewsModal from "../profile/modals/ReviewsModal";
+import ChatButton from "../chats/ChatButton";
 
 
 const OtherProfile = () => {
@@ -87,11 +87,7 @@ const OtherProfile = () => {
                     </button>
 
                 </div>
-                <div className="centered-feedback-button">
-                    <button className="btn-feedback" onClick={() => alert("Залишити відгук (плейсхолдер)")}>
-                        Залишити відгук
-                    </button>
-                </div>
+
             </div>
             {showReviews && (
                 <ReviewsModal
