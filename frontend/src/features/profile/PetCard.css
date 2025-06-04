@@ -1,10 +1,13 @@
 .pet-card {
+    position: relative;
+    left: 25%;
     background-color: white;
     padding: 1rem;
     border-radius: 0.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
     border: 3px solid rgba(0, 0, 0, 0.10);
+    width: 45%;
 }
 
 .pet-photos {
@@ -20,7 +23,10 @@
     object-fit: cover;
     border-radius: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    position: relative; /* обязательно для z-index */
 }
+
 
 .pet-buttons {
     margin-top: 0.75rem;
@@ -73,4 +79,26 @@
     font-size: 12px;
     z-index: 10;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+
+.photo-count-overlay {
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+    background-color: rgba(0, 0, 0, 0.65);
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 9999px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.pet-photo-preview {
+    position: relative;
+
+
 }

@@ -12,11 +12,11 @@
     background-color: #ffffff;
     border-radius: 0.5rem;
     padding: 2rem;
-    max-width: 480px;
+    max-width: 590px;
     width: 90%;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     position: relative;
-    text-align: center;
+    text-align: left;
 }
 
 .modal-title {

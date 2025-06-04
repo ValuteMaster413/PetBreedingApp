@@ -25,7 +25,7 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
     return (
         <div className="pet-card">
             <p><strong>Вид:</strong> {pet.species}</p>
-            <p><strong>Стать:</strong> {pet.gender}</p>
+            <p><strong>Стать:</strong> {pet.gender === "female" ? "Дівчинка" : pet.gender === "male" ? "Хлопчик" : "Невідомо"}</p>
             <p><strong>Порода:</strong> {pet.breed || "Невідомо"}</p>
             <p><strong>Колір шерсті:</strong> {pet.coat_color || "Невідомо"}</p>
             <p><strong>Ціна:</strong> {pet.price || "Безкоштовно"}</p>
@@ -33,7 +33,7 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
 
             {pet.photos?.length > 0 && (
                 <>
-                    <div className="pet-photo-preview" style={{ position: "relative" }}>
+                    <div className="pet-photo-preview">
                         <img
                             src={`http://localhost:8000${pet.photos[0].url}`}
                             alt="preview"

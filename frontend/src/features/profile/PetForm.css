@@ -1,9 +1,9 @@
 .pet-form {
     background-color: white;
-    padding: 1.5rem;
+    padding: 3rem;
     border-radius: 0.5rem;
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
 }
 
 .form-title {
