@@ -94,6 +94,9 @@ def user_edit(request, user_id):
         user_profile.phone = phone
         user_profile.save()
 
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
