@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { loginUser, logoutUser, registerUser, getCsrfToken, getUserInfo } from "../api/authService";
+import { loginUser, logoutUser, registerUser, getCsrfToken, getUserInfo } from "../../api/authService";
 
 const AuthContext = createContext();
 
@@ -20,11 +20,11 @@ export const AuthProvider = ({ children }) => {
         try {
             const data = await getUserInfo();
             setUser(data);
-            localStorage.setItem("user", JSON.stringify(data)); // Сохраняем в localStorage
+            localStorage.setItem("user", JSON.stringify(data));
         } catch (error) {
             console.error("Ошибка загрузки данных пользователя:", error);
             setUser(null);
-            localStorage.removeItem("user"); // Удаляем из localStorage в случае ошибки
+            localStorage.removeItem("user");
         }
     };
 
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await loginUser({ username, password });
             if (response.success) {
-                await fetchUserInfo(); // Загружаем профиль после входа
+                await fetchUserInfo();
             }
         } catch (error) {
             console.error("Ошибка входа:", error);
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
             const response = await logoutUser();
             if (response.success) {
                 setUser(null);
-                localStorage.removeItem("user"); // Удаляем данные пользователя
+                localStorage.removeItem("user");
             }
         } catch (error) {
             console.error("Ошибка выхода:", error);

@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import "./LikesModal.css";
-import PhotoPreviewGrid from "./PhotoPreviewGrid";
-import {getCsrfToken} from "../../api/authService";
+import PhotoPreviewGrid from "../../shared/components/PhotoPreviewGrid";
+import {getCsrfToken} from "../../../api/authService";
 
 const LikesModal = ({ petId, onClose, onDislike }) => {
 

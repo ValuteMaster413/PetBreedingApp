@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./PetCard.css";
-import PhotoPreviewGrid from "./PhotoPreviewGrid";
-import LikesModal from "./LikesModal";
+import PhotoPreviewGrid from "../shared/components/PhotoPreviewGrid";
+import LikesModal from "./modals/LikesModal";
 
 const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
     const [openPreview, setOpenPreview] = useState(false);

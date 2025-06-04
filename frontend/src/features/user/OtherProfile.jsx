@@ -1,10 +1,15 @@
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getCsrfToken } from "../../api/authService";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "./Profile.css";
+import "../profile/pages/Profile.css";
 import "./OtherProfile.css";
-import PhotoPreviewGrid from "./PhotoPreviewGrid";
-import ReviewsModal from "./ReviewsModal";
+import PhotoPreviewGrid from "../shared/components/PhotoPreviewGrid";
+import ReviewsModal from "../profile/modals/ReviewsModal";
+import ChatButton from "../chats/ChatButton";
+
 
 const OtherProfile = () => {
     const { userId } = useParams();
@@ -13,6 +18,7 @@ const OtherProfile = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showReviews, setShowReviews] = useState(false);
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -35,6 +41,32 @@ const OtherProfile = () => {
             .catch(() => console.error("Помилка при завантаженні тварин"))
             .finally(() => setLoading(false));
     }, [userId]);
+    const handleChat = async () => {
+        try {
+            const csrf = await getCsrfToken();
+
+            // Спроба створити чат або отримати існуючий
+            const res = await fetch(`http://localhost:8000/chats/create_chat/${userId}/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrf
+                },
+                credentials: "include"
+            });
+
+            const data = await res.json();
+
+            if (data.chat_id) {
+                navigate(`/chats/${data.chat_id}`);
+            } else {
+                alert("Помилка при створенні або отриманні чату");
+            }
+
+        } catch (err) {
+            alert("Помилка при створенні чату");
+            console.error(err);
+        }
+    };
 
     if (loading) return <p>Завантаження...</p>;
     if (error) return <p className="text-red-500">{error}</p>;
@@ -46,12 +78,7 @@ const OtherProfile = () => {
                 <h2 className="profile-title">{profile.username}</h2>
 
                 <div className="other-profile-buttons">
-                    <button
-                        className="btn-modal-small"
-                        onClick={() => alert("Чат недоступний (плейсхолдер)")}
-                    >
-                        ✉ Написати повідомлення
-                    </button>
+                    <ChatButton targetUserId={userId} targetUsername={profile.username} />
                     <button
                         className="btn-modal-small"
                         onClick={() => setShowReviews(true)}
@@ -60,11 +87,7 @@ const OtherProfile = () => {
                     </button>
 
                 </div>
-                <div className="centered-feedback-button">
-                    <button className="btn-feedback" onClick={() => alert("Залишити відгук (плейсхолдер)")}>
-                        Залишити відгук
-                    </button>
-                </div>
+
             </div>
             {showReviews && (
                 <ReviewsModal

@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
-import {sendLike, checkSympathy} from "../api/likeService";
-import SympathyModal from "../components/matches/SympathyModal";
-import {getCsrfToken} from "../api/authService";
+import {sendLike, checkSympathy} from "../../api/likeService";
+import SympathyModal from "./modals/SympathyModal";
+import {getCsrfToken} from "../../api/authService";
 
 const MatchSwiper = () => {
     const {pet_id} = useParams();
@@ -39,7 +39,7 @@ const MatchSwiper = () => {
             );
 
             const res = await axios.get(
-                `http://localhost:8000/matching/sympathys/${pet_id}/`,
+                `http://localhost:8000/matching/sympathy/${pet_id}/`,
                 { withCredentials: true }
             );
 

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import "./ReviewsModal.css";
-import {getCsrfToken} from "../../api/authService";
+import {getCsrfToken} from "../../../api/authService";
 
 const ReviewsModal = ({userId, onClose}) => {
     const [reviews, setReviews] = useState([]);

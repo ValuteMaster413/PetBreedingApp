@@ -1,13 +1,15 @@
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
-import {AuthProvider} from "./store/AuthContext";
-import LoginForm from "./components/Auth/LoginForm";
-import RegisterForm from "./components/Auth/RegisterForm";
+import {AuthProvider} from "./context/AuthContext";
+import LoginForm from "../features/ auth/LoginForm";
+import RegisterForm from "../features/ auth/RegisterForm";
 import PrivateRoute from "./routes/PrivateRoute";
-import Profile from "./components/Profile/Profile";
-import MatchSwiper from "./pages/MatchSwiper";
-import PetProfile from "./pages/PetProfile";
+import Profile from "../features/profile/pages/Profile";
+import MatchSwiper from "../features/match/MatchSwiper";
+import PetProfile from "../features/pets/PetProfile";
 
-import OtherProfile from "./components/Profile/OtherProfile";
+import OtherProfile from "../features/user/OtherProfile";
+import ChatList from "../features/chats/ChatList";
+import ChatRoom from "../features/chats/ChatRoom";
 
 const App = () => (
     <AuthProvider>
@@ -20,6 +22,8 @@ const App = () => (
 
                 <Route path="/pets/:petId" element={<PetProfile/>}/>
                 <Route path="/profile/:userId" element={<OtherProfile />} />
+                <Route path="/chats" element={<ChatList />} />
+                <Route path="/chats/:chatId" element={<ChatRoom />} />
 
 
             </Routes>
