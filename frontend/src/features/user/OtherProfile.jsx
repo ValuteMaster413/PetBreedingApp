@@ -97,7 +97,7 @@ const OtherProfile = () => {
             )}
 
             <div className="mt-6 w-full max-w-md">
-                <h3 className="text-lg font-semibold mb-2">Tварини {profile.username}</h3>
+                <h3 className="text-lg font-semibold mb-2" style={{ textAlign: 'center' }}>Tварини {profile.username}</h3>
                 {pets.length === 0 ? (
                     <p className="text-gray-500">Тварин не знайдено</p>
                 ) : (

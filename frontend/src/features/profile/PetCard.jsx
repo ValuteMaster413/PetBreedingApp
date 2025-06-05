@@ -8,7 +8,20 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
     const [showLikesModal, setShowLikesModal] = useState(false);
     const [likesCount, setLikesCount] = useState(0);
 
-    // завантажити кількість лайків
+    const formatAge = (months) => {
+        if (months < 1) return "менше місяця";
+        if (months === 6) return "півроку";
+        if (months < 12) return `${months} ${months === 1 ? "місяць" : months < 5 ? "місяці" : "місяців"}`;
+        if (months % 12 === 0) {
+            const years = months / 12;
+            return `${years} ${years === 1 ? "рік" : years < 5 ? "роки" : "років"}`;
+        }
+
+        const years = Math.floor(months / 12);
+        const remainingMonths = months % 12;
+        return `${years} ${years === 1 ? "рік" : years < 5 ? "роки" : "років"} ${remainingMonths} ${remainingMonths === 1 ? "місяць" : remainingMonths < 5 ? "місяці" : "місяців"}`;
+    };
+
     useEffect(() => {
         fetch(`http://localhost:8000/matching/likes_to_me/${pet.id}/`, { credentials: "include" })
             .then(res => res.json())
@@ -29,7 +42,7 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
             <p><strong>Порода:</strong> {pet.breed || "Невідомо"}</p>
             <p><strong>Колір шерсті:</strong> {pet.coat_color || "Невідомо"}</p>
             <p><strong>Ціна:</strong> {pet.price || "Безкоштовно"}</p>
-            <p><strong>Вік:</strong> {pet.age} міс.</p>
+            <p><strong>Вік:</strong> {formatAge(pet.age)}</p>
 
             {pet.photos?.length > 0 && (
                 <>

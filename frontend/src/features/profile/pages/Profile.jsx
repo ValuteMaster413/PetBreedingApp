@@ -140,8 +140,8 @@
                         console.log("photoId:", photoUrlOrId);
                     } else if (typeof photoUrlOrId === "string") {
                         // Витягуємо id з URL, наприклад /media/pet_photos/42.png
-                        const filename = photoUrlOrId.split("/").pop();        // "42.png"
-                        photoId = parseInt(filename.split(".")[0], 10);        // 42
+                        const filename = photoUrlOrId.split("/").pop();
+                        photoId = parseInt(filename.split(".")[0], 10);
                         console.log("photoId:", photoUrlOrId);
                     }
 
@@ -201,7 +201,7 @@
                             ...petToEdit,
                             photos: petToEdit.photos.filter(photo => !deletePhotoIds.includes(photo.id)),
                         });
-                        setDeletePhotoIds([]); // очистка
+                        setDeletePhotoIds([]);
                     }
                 } catch (error) {
                     console.error("Помилка при видаленні фото:", error);

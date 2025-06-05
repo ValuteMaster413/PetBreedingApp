@@ -44,9 +44,14 @@ const MatchSwiper = () => {
                 }
             );
 
-            const res = await axios.get(
+
+            const res = await axios.post(
                 `http://localhost:8000/matching/sympathy/${pet_id}/`,
-                {withCredentials: true}
+                {},
+                {
+                    headers: { "X-CSRFToken": csrf },
+                    withCredentials: true
+                }
             );
 
             const mutual = res.data.sympathys.find(sym =>

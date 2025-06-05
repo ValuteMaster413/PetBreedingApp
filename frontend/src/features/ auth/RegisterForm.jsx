@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../app/context/AuthContext";
 import "./RegisterForm.css";
+import { Link } from "react-router-dom";
 
 const RegisterForm = () => {
     const navigate = useNavigate();
@@ -47,6 +48,9 @@ const RegisterForm = () => {
                 <input type="password" name="password" placeholder="Пароль" onChange={handleChange} required />
                 <button type="submit">Зареєструватися</button>
             </form>
+            <p className="text-sm text-gray-600 mt-4">
+                Вже маєте акаунт? <Link to="/login" className="text-blue-600 hover:underline">Увійти</Link>
+            </p>
         </div>
     );
 };

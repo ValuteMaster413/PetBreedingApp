@@ -3,9 +3,11 @@
     padding: 3rem;
     border-radius: 0.5rem;
     width: 100%;
-    max-width: 800px;
+    max-width: 28rem;
 }
-
+.centered-form {
+    margin-right: 120px;
+}
 .form-title {
     font-size: 1.25rem;
     font-weight: bold;
@@ -23,7 +25,12 @@
     border: 1px solid #d1d5db;
     border-radius: 0.375rem;
 }
-
+.form-input-select {
+    width: 105%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+}
 .form-error {
     color: #dc2626;
     font-size: 0.875rem;
@@ -58,3 +65,4 @@
     border-radius: 0.375rem;
     cursor: pointer;
 }
+

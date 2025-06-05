@@ -1,0 +1,160 @@
+.chat-room {
+    max-width: 700px;
+    height: 80vh;
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    background: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.messages-box {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: #e5ddd5;
+}
+.message {
+    padding: 0.6rem 0.9rem;
+    border-radius: 16px;
+    word-wrap: break-word;
+    font-size: 1rem;
+    line-height: 1.4;
+    background-color: #fff;
+    position: relative;
+    max-width: 100%;
+}
+
+.message-wrapper.user .message {
+    background-color: #dcf8c6;
+    border-top-right-radius: 0;
+}
+
+.message-wrapper.other .message {
+    background-color: #cce5ff;
+    border-top-left-radius: 0;
+}
+
+
+.message.user {
+    align-self: flex-end;
+    background-color: #dcf8c6;
+    border-top-right-radius: 0;
+}
+
+.message.other {
+    align-self: flex-start;
+    background-color: #cce5ff;
+    border-top-left-radius: 0;
+}
+
+
+.message strong {
+    display: block;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 0.25rem;
+}
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.actions button {
+    width: 32px;
+    height: 32px;
+    border: none;
+    font-size: 1rem;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.actions button:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.05);
+}
+.input-box {
+    display: flex;
+    padding: 0.75rem;
+    border-top: 1px solid #ccc;
+    background: #f9f9f9;
+}
+
+.input-box input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    background: white;
+    transition: border-color 0.2s ease;
+}
+
+.input-box input:focus {
+    border-color: #4fc3f7;
+}
+
+.input-box button {
+    margin-left: 0.75rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    background-color: #4fc3f7;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.input-box button:hover {
+    background-color: #039be5;
+}
+.action-red {
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    padding: 4px 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    margin-right: 0px;
+}
+.action-del {
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    padding: 4px 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    margin-left: 10px;
+}
+.message-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 70%;
+}
+.message-wrapper.user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.message-wrapper.other {
+    align-self: flex-start;
+}
+

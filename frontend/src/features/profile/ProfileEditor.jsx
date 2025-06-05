@@ -35,7 +35,7 @@ const ProfileEditor = ({
                     onChange={(e) => setEditData({ ...editData, password: e.target.value })}
                     className="editor-input"
                 />
-                <small className="editor-note">Залиште порожнім, якщо не хочете змінювати пароль</small>
+                <small className="editor-note">Залиште незмінним, якщо не хочете змінювати пароль</small>
 
                 <div className="editor-actions">
                     <button className="btn-save" onClick={onSave}>Зберегти</button>
