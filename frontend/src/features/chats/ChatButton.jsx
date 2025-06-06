@@ -8,7 +8,7 @@ const ChatButton = ({ targetUserId, targetUsername }) => {
         try {
             const csrf = await getCsrfToken();
 
-            const createRes = await fetch(`http://localhost:8000/chats/create_chat/${targetUserId}/`, {
+            const createRes = await fetch(`http://localhost:8000/chat/create_chat/${targetUserId}/`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -19,7 +19,7 @@ const ChatButton = ({ targetUserId, targetUsername }) => {
             const createData = await createRes.json();
 
             if (createData.chat_id) {
-                navigate(`/chats/${createData.chat_id}`);
+                navigate(`/chat/${createData.chat_id}`);
             } else {
                 alert("Помилка при створенні або відкритті чату.");
             }
