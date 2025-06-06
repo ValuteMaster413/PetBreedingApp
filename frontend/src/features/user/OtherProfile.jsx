@@ -1,19 +1,17 @@
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { getCsrfToken } from "../../api/authService";
-
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getCsrfToken } from "../../api/authService";
 import "../profile/pages/Profile.css";
 import "./OtherProfile.css";
 import PhotoPreviewGrid from "../shared/components/PhotoPreviewGrid";
 import ReviewsModal from "../profile/modals/ReviewsModal";
 import ChatButton from "../chats/ChatButton";
 
-
 const OtherProfile = () => {
+    const { t } = useTranslation();
     const { userId } = useParams();
-    console.log("👤 userId from params:", userId);
     const [profile, setProfile] = useState(null);
     const [pets, setPets] = useState([]);
     const [error, setError] = useState(null);
@@ -21,17 +19,16 @@ const OtherProfile = () => {
     const [showReviews, setShowReviews] = useState(false);
     const navigate = useNavigate();
 
-
     useEffect(() => {
         axios.get(`http://localhost:8000/users/user_info/${userId}/`, { withCredentials: true })
             .then(res => {
                 if (res.data.chats && Array.isArray(res.data.chats) && res.data.chats.length > 0) {
                     setProfile(res.data.chats[0]);
                 } else {
-                    setError("Користувача не знайдено");
+                    setError(t("errors.profile.not_found"));
                 }
             })
-            .catch(() => setError("Помилка при завантаженні профілю"));
+            .catch(() => setError(t("errors.profile.load")));
 
         axios.get(`http://localhost:8000/pets/all_pets/${userId}/`, { withCredentials: true })
             .then(res => {
@@ -39,39 +36,13 @@ const OtherProfile = () => {
                     setPets(res.data.reports);
                 }
             })
-            .catch(() => console.error("Помилка при завантаженні тварин"))
+            .catch(() => console.error(t("errors.pets.load")))
             .finally(() => setLoading(false));
-    }, [userId]);
-    const handleChat = async () => {
-        try {
-            const csrf = await getCsrfToken();
+    }, [userId, t]);
 
-            // Спроба створити чат або отримати існуючий
-            const res = await fetch(`http://localhost:8000/chats/create_chat/${userId}/`, {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": csrf
-                },
-                credentials: "include"
-            });
-
-            const data = await res.json();
-
-            if (data.chat_id) {
-                navigate(`/chats/${data.chat_id}`);
-            } else {
-                alert("Помилка при створенні або отриманні чату");
-            }
-
-        } catch (err) {
-            alert("Помилка при створенні чату");
-            console.error(err);
-        }
-    };
-
-    if (loading) return <p>Завантаження...</p>;
+    if (loading) return <p>{t("likes.loading")}</p>;
     if (error) return <p className="text-red-500">{error}</p>;
-    if (!profile) return <p>Профіль не знайдено</p>;
+    if (!profile) return <p>{t("errors.profile.not_found")}</p>;
 
     return (
         <div className="profile-container">
@@ -84,12 +55,11 @@ const OtherProfile = () => {
                         className="btn-modal-small"
                         onClick={() => setShowReviews(true)}
                     >
-                        ★ Переглянути відгуки
+                        {t("otherprofile.reviews")}
                     </button>
-
                 </div>
-
             </div>
+
             {showReviews && (
                 <ReviewsModal
                     userId={userId}
@@ -98,9 +68,11 @@ const OtherProfile = () => {
             )}
 
             <div className="mt-6 w-full max-w-md">
-                <h3 className="text-lg font-semibold mb-2" style={{ textAlign: 'center' }}>Tварини {profile.username}</h3>
+                <h3 className="text-lg font-semibold mb-2" style={{ textAlign: 'center' }}>
+                    {t("otherprofile.pets.title", { username: profile.username })}
+                </h3>
                 {pets.length === 0 ? (
-                    <p className="text-gray-500">Тварин не знайдено</p>
+                    <p className="text-gray-500">{t("otherprofile.pets.none")}</p>
                 ) : (
                     <div className="space-y-4">
                         {pets.map((pet, index) => (
@@ -114,16 +86,17 @@ const OtherProfile = () => {
 };
 
 const PetReadonlyCard = ({ pet }) => {
+    const { t } = useTranslation();
     const [openPreview, setOpenPreview] = useState(false);
 
     return (
         <div className="pet-card">
-            <p><strong>Вид:</strong> {pet.species}</p>
-            <p><strong>Стать:</strong> {pet.gender}</p>
-            <p><strong>Порода:</strong> {pet.breed || "Невідомо"}</p>
-            <p><strong>Колір шерсті:</strong> {pet.coat_color || "Невідомо"}</p>
-            <p><strong>Ціна:</strong> {pet.price || "Безкоштовно"}</p>
-            <p><strong>Вік:</strong> {pet.age} міс.</p>
+            <p><strong>{t("petcard.species")}:</strong> {pet.species}</p>
+            <p><strong>{t("petcard.gender")}:</strong> {pet.gender}</p>
+            <p><strong>{t("petcard.breed")}:</strong> {pet.breed || t("match.unknown")}</p>
+            <p><strong>{t("petcard.color")}:</strong> {pet.coat_color || t("match.unknown")}</p>
+            <p><strong>{t("petcard.price")}:</strong> {pet.price || t("match.free")}</p>
+            <p><strong>{t("petcard.age")}:</strong> {pet.age} міс.</p>
 
             {pet.photos?.length > 0 && (
                 <>

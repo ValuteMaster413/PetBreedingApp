@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./PhotoViewer.css";
 
 const PhotoViewer = ({ photos = [], startIndex = 0, onClose }) => {
     const [index, setIndex] = useState(startIndex);
+    const { t } = useTranslation();
 
     const next = () => setIndex((i) => (i + 1) % photos.length);
     const prev = () => setIndex((i) => (i - 1 + photos.length) % photos.length);
@@ -12,7 +14,6 @@ const PhotoViewer = ({ photos = [], startIndex = 0, onClose }) => {
             <div className="viewer-content" onClick={(e) => e.stopPropagation()}>
                 <img
                     src={`http://localhost:8000${typeof photos[index] === "string" ? photos[index] : photos[index].url}`}
-
                     alt="viewer"
                     className="viewer-image"
                 />

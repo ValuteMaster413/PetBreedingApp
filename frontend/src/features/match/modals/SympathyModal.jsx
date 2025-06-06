@@ -1,8 +1,10 @@
 import React from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import "./SympathyModal.css";
 
 const SympathyModal = ({ pet, onClose, onNext }) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     if (!pet) return null;
@@ -10,8 +12,13 @@ const SympathyModal = ({ pet, onClose, onNext }) => {
     return (
         <div className="modal-backdrop" onClick={onClose}>
             <div className="modal-container" onClick={(e) => e.stopPropagation()}>
-                <h2 className="modal-title">💞 У вас взаємна симпатія!</h2>
-                <p>Ваша тварина і <strong>{pet.species}</strong> (стать: {pet.gender}) вподобали одне одного!</p>
+                <h2 className="modal-title">💞 {t("match.mutual_sympathy")}</h2>
+                <p>
+                    {t("match.mutual_message", {
+                        species: pet.species,
+                        gender: t(`petcard.gender.${pet.gender}`) || pet.gender
+                    })}
+                </p>
 
                 {pet.photos?.length > 0 && (
                     <img
@@ -23,15 +30,14 @@ const SympathyModal = ({ pet, onClose, onNext }) => {
 
                 <div className="modal-buttons">
                     <button onClick={() => navigate(`/pets/${pet.id}`)} className="btn-modal">
-                        Профіль тварини
+                        {t("pet.owner_profile")}
                     </button>
                     <button onClick={() => navigate(`/chat?to=${pet.owner_id}`)} className="btn-modal">
-                        ✉ Написати повідомлення
+                        ✉ {t("chat_button.send_message")}
                     </button>
                     <button onClick={onNext} className="btn-modal-cancel">
-                        ▶ Продовжити перегляд
+                        ▶ {t("match.back_to_profile")}
                     </button>
-
                 </div>
             </div>
         </div>

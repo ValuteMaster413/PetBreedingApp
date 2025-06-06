@@ -2,24 +2,25 @@ import React, { useEffect, useState } from "react";
 import "./PetCard.css";
 import PhotoPreviewGrid from "../shared/components/PhotoPreviewGrid";
 import LikesModal from "./modals/LikesModal";
+import { useTranslation } from "react-i18next";
 
 const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
+    const { t } = useTranslation();
     const [openPreview, setOpenPreview] = useState(false);
     const [showLikesModal, setShowLikesModal] = useState(false);
     const [likesCount, setLikesCount] = useState(0);
 
     const formatAge = (months) => {
-        if (months < 1) return "менше місяця";
-        if (months === 6) return "півроку";
-        if (months < 12) return `${months} ${months === 1 ? "місяць" : months < 5 ? "місяці" : "місяців"}`;
+        if (months < 1) return t("petcard.age.less_than_month");
+        if (months === 6) return t("petcard.age.half_year");
+        if (months < 12) return t("petcard.age.months", { count: months });
         if (months % 12 === 0) {
             const years = months / 12;
-            return `${years} ${years === 1 ? "рік" : years < 5 ? "роки" : "років"}`;
+            return t("petcard.age.years", { count: years });
         }
-
         const years = Math.floor(months / 12);
         const remainingMonths = months % 12;
-        return `${years} ${years === 1 ? "рік" : years < 5 ? "роки" : "років"} ${remainingMonths} ${remainingMonths === 1 ? "місяць" : remainingMonths < 5 ? "місяці" : "місяців"}`;
+        return t("petcard.age.years_months", { years, months: remainingMonths });
     };
 
     useEffect(() => {
@@ -31,18 +32,18 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
                 }
             })
             .catch(err => {
-                console.error("Не вдалося отримати кількість лайків:", err);
+                console.error(t("petcard.error_loading_likes"), err);
             });
     }, [pet.id]);
 
     return (
         <div className="pet-card">
-            <p><strong>Вид:</strong> {pet.species}</p>
-            <p><strong>Стать:</strong> {pet.gender === "female" ? "Дівчинка" : pet.gender === "male" ? "Хлопчик" : "Невідомо"}</p>
-            <p><strong>Порода:</strong> {pet.breed || "Невідомо"}</p>
-            <p><strong>Колір шерсті:</strong> {pet.coat_color || "Невідомо"}</p>
-            <p><strong>Ціна:</strong> {pet.price || "Безкоштовно"}</p>
-            <p><strong>Вік:</strong> {formatAge(pet.age)}</p>
+            <p><strong>{t("petcard.species")}:</strong> {pet.species}</p>
+            <p><strong>{t("petcard.gender")}:</strong> {t(`petcard.gender.${pet.gender}`)}</p>
+            <p><strong>{t("petcard.breed")}:</strong> {pet.breed || t("petcard.unknown")}</p>
+            <p><strong>{t("petcard.coat_color")}:</strong> {pet.coat_color || t("petcard.unknown")}</p>
+            <p><strong>{t("petcard.price")}:</strong> {pet.price || t("petcard.free")}</p>
+            <p><strong>{t("petcard.age")}:</strong> {formatAge(pet.age)}</p>
 
             {pet.photos?.length > 0 && (
                 <>
@@ -70,13 +71,13 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
             )}
 
             <div className="pet-buttons">
-                <button className="btn-delete" onClick={onDelete}>🗑 Видалити</button>
-                <button className="btn-edit" onClick={onEdit}>✏️ Редагувати</button>
-                <button className="btn-match" onClick={onMatch}>🔍 Пошук пари</button>
+                <button className="btn-delete" onClick={onDelete}>🗑 {t("petcard.delete")}</button>
+                <button className="btn-edit" onClick={onEdit}>✏️ {t("petcard.edit")}</button>
+                <button className="btn-match" onClick={onMatch}>🔍 {t("petcard.match")}</button>
 
                 <div style={{ position: "relative" }}>
                     <button className="btn-likes" onClick={() => setShowLikesModal(true)}>
-                        ❤️ Хто вподобав?
+                        ❤️ {t("petcard.who_liked")}
                     </button>
                     {likesCount > 0 && (
                         <div className="likes-badge">{likesCount}</div>

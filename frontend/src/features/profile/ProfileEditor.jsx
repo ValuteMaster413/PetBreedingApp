@@ -1,5 +1,6 @@
 import React from "react";
 import "./ProfileEditor.css";
+import { useTranslation } from "react-i18next";
 
 const ProfileEditor = ({
                            editData,
@@ -9,19 +10,21 @@ const ProfileEditor = ({
                            errorMessage,
                            successMessage
                        }) => {
+    const { t } = useTranslation();
+
     return (
         <div className="modal-backdrop" onClick={onCancel}>
             <div className="profile-editor" onClick={(e) => e.stopPropagation()}>
-                <h2 className="editor-title">Редагування профілю</h2>
+                <h2 className="editor-title">{t("profileEditor.title")}</h2>
 
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
-                {successMessage && <p className="success-message">{successMessage}</p>}
+                {errorMessage && <p className="error-message">{t(errorMessage)}</p>}
+                {successMessage && <p className="success-message">{t(successMessage)}</p>}
 
                 {["username", "email", "phone"].map((field) => (
                     <input
                         key={field}
                         type="text"
-                        placeholder={field}
+                        placeholder={t(`profileEditor.fields.${field}`)}
                         value={editData[field]}
                         onChange={(e) => setEditData({ ...editData, [field]: e.target.value })}
                         className="editor-input"
@@ -30,16 +33,20 @@ const ProfileEditor = ({
 
                 <input
                     type="password"
-                    placeholder="Новий пароль"
+                    placeholder={t("profileEditor.passwordPlaceholder")}
                     value={editData.password}
                     onChange={(e) => setEditData({ ...editData, password: e.target.value })}
                     className="editor-input"
                 />
-                <small className="editor-note">Залиште незмінним, якщо не хочете змінювати пароль</small>
+                <small className="editor-note">{t("profileEditor.passwordNote")}</small>
 
                 <div className="editor-actions">
-                    <button className="btn-save" onClick={onSave}>Зберегти</button>
-                    <button className="btn-cancel" onClick={onCancel}>Скасувати</button>
+                    <button className="btn-save" onClick={onSave}>
+                        {t("buttons.save")}
+                    </button>
+                    <button className="btn-cancel" onClick={onCancel}>
+                        {t("buttons.cancel")}
+                    </button>
                 </div>
             </div>
         </div>

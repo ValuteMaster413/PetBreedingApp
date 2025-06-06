@@ -1,10 +1,12 @@
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import AuthContext from "../../app/context/AuthContext";
+import LanguageSwitcher from "../shared/components/LanguageSwitcher";
 import "./RegisterForm.css";
-import { Link } from "react-router-dom";
 
 const RegisterForm = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { signUp, signIn } = useContext(AuthContext);
 
@@ -32,24 +34,52 @@ const RegisterForm = () => {
                 navigate("/profile");
             }
         } catch (err) {
-            setError(err.error || "Помилка при реєстрації");
+            setError(err.error || t("errors.register_failed"));
         }
     };
 
     return (
         <div className="register-form">
-            <h2>Реєстрація</h2>
+            <LanguageSwitcher />
+            <h2>{t("register.title")}</h2>
             {error && <p style={{ color: "red" }}>{error}</p>}
             {success && <p style={{ color: "green" }}>{success}</p>}
             <form onSubmit={handleSubmit}>
-                <input type="text" name="username" placeholder="Ім’я користувача" onChange={handleChange} required />
-                <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-                <input type="text" name="phone" placeholder="Телефон" onChange={handleChange} required />
-                <input type="password" name="password" placeholder="Пароль" onChange={handleChange} required />
-                <button type="submit">Зареєструватися</button>
+                <input
+                    type="text"
+                    name="username"
+                    placeholder={t("register.username")}
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="email"
+                    name="email"
+                    placeholder={t("register.email")}
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="text"
+                    name="phone"
+                    placeholder={t("register.phone")}
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="password"
+                    name="password"
+                    placeholder={t("register.password")}
+                    onChange={handleChange}
+                    required
+                />
+                <button type="submit">{t("register.submit")}</button>
             </form>
             <p className="text-sm text-gray-600 mt-4">
-                Вже маєте акаунт? <Link to="/login" className="text-blue-600 hover:underline">Увійти</Link>
+                {t("register.login_question")}{" "}
+                <Link to="/login" className="text-blue-600 hover:underline">
+                    {t("register.login_link")}
+                </Link>
             </p>
         </div>
     );

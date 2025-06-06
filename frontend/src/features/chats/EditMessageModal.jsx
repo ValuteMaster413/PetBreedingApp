@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./EditMessageModal.css";
 
 const EditMessageModal = ({ messageId, initialText, onSave, onCancel }) => {
+    const { t } = useTranslation();
     const [newText, setNewText] = useState(initialText || "");
 
     const handleSubmit = (e) => {
@@ -12,7 +14,7 @@ const EditMessageModal = ({ messageId, initialText, onSave, onCancel }) => {
     return (
         <div className="edit-modal-backdrop" onClick={onCancel}>
             <div className="edit-modal" onClick={e => e.stopPropagation()}>
-                <h3>Редагувати повідомлення</h3>
+                <h3>{t("chatroom.edit")}</h3>
                 <form onSubmit={handleSubmit}>
                     <textarea
                         value={newText}
@@ -21,8 +23,8 @@ const EditMessageModal = ({ messageId, initialText, onSave, onCancel }) => {
                         autoFocus
                     />
                     <div className="edit-modal-actions">
-                        <button type="submit">💾 Зберегти</button>
-                        <button type="button" onClick={onCancel}>❌ Скасувати</button>
+                        <button type="submit">💾 {t("chatroom.save")}</button>
+                        <button type="button" onClick={onCancel}>❌ {t("chatroom.cancel")}</button>
                     </div>
                 </form>
             </div>

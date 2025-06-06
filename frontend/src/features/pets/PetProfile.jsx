@@ -1,11 +1,13 @@
-import {useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import PhotoPreviewGrid from "../shared/components/PhotoPreviewGrid";
 import "./PetProfile.css";
+import { useTranslation } from "react-i18next";
 
 const PetProfile = () => {
-    const {petId} = useParams();
+    const { t } = useTranslation();
+    const { petId } = useParams();
     const [pet, setPet] = useState(null);
     const [error, setError] = useState(null);
     const [showGallery, setShowGallery] = useState(false);
@@ -19,49 +21,50 @@ const PetProfile = () => {
                 const data = response.data.report;
                 const transformed = {
                     ...data,
-                    photos: data.photos.map(p => ({url: p}))
+                    photos: data.photos.map(p => ({ url: p }))
                 };
                 setPet(transformed);
             } catch (e) {
-                console.error("Помилка при отриманні профілю тварини", e);
-                setError("Не вдалося завантажити профіль тварини.");
+                console.error("Failed to fetch pet profile", e);
+                setError(t("errors.pets.load"));
             }
         };
 
         fetchPet();
-    }, [petId]);
+    }, [petId, t]);
 
     if (error) return <p className="text-red-500 text-center mt-6">{error}</p>;
-    if (!pet) return <p className="text-center mt-6">Завантаження...</p>;
+    if (!pet) return <p className="text-center mt-6">{t("likes.loading")}</p>;
 
     return (
         <div className="max-w-md mx-auto bg-white shadow rounded p-6 mt-8">
-            <h2 className="text-2xl font-bold mb-4 text-center">Профіль тварини</h2>
+            <h2 className="text-2xl font-bold mb-4 text-center">{t("pet.profile_title")}</h2>
 
-            <p><strong>Вид:</strong> {pet.species}</p>
-            <p><strong>Стать:</strong> {pet.gender}</p>
-            <p><strong>Порода:</strong> {pet.breed || "Невідомо"}</p>
-            <p><strong>Колір шерсті:</strong> {pet.coat_color || "Невідомо"}</p>
-            <p><strong>Ціна:</strong> {pet.price || "Безкоштовно"}</p>
-            <p><strong>Вік:</strong> {pet.age} міс.</p>
+            <p><strong>{t("pet.species")}:</strong> {pet.species}</p>
+            <p><strong>{t("pet.gender")}:</strong> {t(`petcard.gender.${pet.gender}`)}</p>
+            <p><strong>{t("pet.breed")}:</strong> {pet.breed || t("match.unknown")}</p>
+            <p><strong>{t("pet.color")}:</strong> {pet.coat_color || t("match.unknown")}</p>
+            <p><strong>{t("pet.price")}:</strong> {pet.price || t("match.free")}</p>
+            <p><strong>{t("pet.age")}:</strong> {pet.age} міс.</p>
             <p>
-                <strong>Власник:</strong>{" "}
+                <strong>{t("pet.owner_profile")}:</strong>{" "}
                 <a
                     href={`/user/${pet.owner_id}`}
                     className="text-blue-600 underline hover:text-blue-800"
                 >
-                    Переглянути профіль власника
+                    {t("pet.owner_profile")}
                 </a>
             </p>
+
             {pet.photos?.length > 0 && (
-                <div
-                    className="mt-4 cursor-pointer relative"
-                    onClick={() => setShowGallery(true)}
-                >
-                    <img src={`http://localhost:8000${pet.photos[0].url}`} alt="pet" className="w-full h-64 object-cover rounded" />
+                <div className="mt-4 cursor-pointer relative" onClick={() => setShowGallery(true)}>
+                    <img
+                        src={`http://localhost:8000${pet.photos[0].url}`}
+                        alt="pet"
+                        className="w-full h-64 object-cover rounded"
+                    />
                     {pet.photos.length > 1 && (
-                        <div
-                            className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                        <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
                             +{pet.photos.length - 1}
                         </div>
                     )}

@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { getCsrfToken } from "../../api/authService";
 import axios from "axios";
 import "./PetEditor.css";
 
 const PetEditor = ({ pet, onClose, onUpdate }) => {
+    const { t } = useTranslation();
 
     const [editedPet, setEditedPet] = useState({ ...pet });
     const [newPhotos, setNewPhotos] = useState([]);
@@ -12,6 +14,7 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
     const [selectedPhotoIds, setSelectedPhotoIds] = useState([]);
     const [viewerOpen, setViewerOpen] = useState(false);
     const [viewerIndex, setViewerIndex] = useState(0);
+
     const togglePhotoSelection = (id) => {
         setSelectedPhotoIds((prev) =>
             prev.includes(id)
@@ -30,14 +33,12 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
             const csrf = await getCsrfToken();
             const formData = new FormData();
 
-            // 🔁 Додаємо всі звичайні поля тварини
             for (const key in editedPet) {
                 if (editedPet[key] !== null && typeof editedPet[key] !== "object") {
                     formData.append(key, editedPet[key]);
                 }
             }
 
-            // 🗑 Додаємо ID фото для видалення
             selectedPhotoIds.forEach((id) => formData.append("delete_photo", id));
 
             const res = await axios.post(
@@ -60,7 +61,7 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
                 setSelectedPhotoIds([]);
             }
         } catch (e) {
-            console.error("Помилка видалення фото:", e);
+            console.error(t("errors.delete_photo"), e);
         }
     };
 
@@ -83,12 +84,12 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
 
     const handleSubmit = async () => {
         const errors = {};
-        if (!editedPet.species?.trim()) errors.species = "Обов'язкове поле";
-        if (!editedPet.gender?.trim()) errors.gender = "Обов'язкове поле";
-        if (editedPet.price === "") errors.price = "Обов'язкове поле";
-        else if (!/^\d+(\.\d{1,2})?$/.test(editedPet.price)) errors.price = "Ціна має бути числом";
-        if (editedPet.age === "") errors.age = "Обов'язкове поле";
-        else if (!/^\d+$/.test(editedPet.age)) errors.age = "Вік має бути числом";
+        if (!editedPet.species?.trim()) errors.species = t("form.required");
+        if (!editedPet.gender?.trim()) errors.gender = t("form.required");
+        if (editedPet.price === "") errors.price = t("form.required");
+        else if (!/^[0-9]+(\.[0-9]{1,2})?$/.test(editedPet.price)) errors.price = t("form.price_number");
+        if (editedPet.age === "") errors.age = t("form.required");
+        else if (!/^[0-9]+$/.test(editedPet.age)) errors.age = t("form.age_number");
 
         if (Object.keys(errors).length > 0) {
             setFormErrors(errors);
@@ -125,25 +126,23 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
                 onClose();
             }
         } catch (err) {
-            console.error("Помилка при збереженні:", err);
+            console.error(t("errors.save"), err);
         } finally {
             setIsSaving(false);
         }
-
-
     };
 
     return (
         <div className="pet-editor-wrapper">
             <div className="pet-editor-container">
-                <h2 className="pet-editor-title">Редагування тварини</h2>
+                <h2 className="pet-editor-title">{t("pet.edit")}</h2>
 
                 {["species", "breed", "coat_color", "age", "price"].map((field) => (
                     <div key={field} className="form-group">
                         <input
                             type="text"
                             name={field}
-                            placeholder={field}
+                            placeholder={t(`pet.${field}`)}
                             value={editedPet[field] || ""}
                             onChange={handleChange}
                             className="form-input"
@@ -161,9 +160,9 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
                         onChange={handleChange}
                         className="form-input"
                     >
-                        <option value="">Оберіть стать</option>
-                        <option value="male">Самець</option>
-                        <option value="female">Самка</option>
+                        <option value="">{t("pet.select_gender")}</option>
+                        <option value="male">{t("pet.male")}</option>
+                        <option value="female">{t("pet.female")}</option>
                     </select>
                     {formErrors.gender && <p className="form-error">{formErrors.gender}</p>}
                 </div>
@@ -203,7 +202,7 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
                         onClick={handleDeleteSelected}
                         className="btn-delete-selected"
                     >
-                        🗑 Видалити {selectedPhotoIds.length} фото
+                        🗑 {t("pet.delete_selected", { count: selectedPhotoIds.length })}
                     </button>
                 )}
                 <div className="pet-editor-actions">
@@ -212,13 +211,13 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
                         className="pet-editor-btn-save"
                         disabled={isSaving}
                     >
-                        {isSaving ? "Збереження..." : "Зберегти"}
+                        {isSaving ? t("common.saving") : t("common.save")}
                     </button>
                     <button
                         onClick={onClose}
                         className="pet-editor-btn-cancel"
                     >
-                        ✖ Скасувати
+                        ✖ {t("common.cancel")}
                     </button>
                 </div>
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./PhotoGallery.css";
 
 const PhotoGallery = ({
@@ -7,6 +8,7 @@ const PhotoGallery = ({
                           selectedIds = [],
                           onToggleSelect = () => {}
                       }) => {
+    const { t } = useTranslation();
     const [viewerOpen, setViewerOpen] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
 

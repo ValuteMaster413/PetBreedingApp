@@ -1,14 +1,16 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./PhotoPreviewGrid.css";
 import PhotoViewer from "./PhotoViewer";
 
 const PhotoPreviewGrid = ({ photos, onClose }) => {
     const [viewerIndex, setViewerIndex] = useState(null);
+    const { t } = useTranslation();
 
     return (
         <div className="preview-backdrop" onClick={onClose}>
             <div className="preview-grid" onClick={(e) => e.stopPropagation()}>
-                <h2 className="preview-title">Усі фото тварини</h2>
+                <h2 className="preview-title">{t("photopreview.title")}</h2>
                 <div className="preview-thumbs">
                     {photos.map((photo, i) => (
                         <img

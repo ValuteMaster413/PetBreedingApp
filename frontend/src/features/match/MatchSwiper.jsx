@@ -1,13 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
-import {getCsrfToken} from "../../api/authService";
+import { getCsrfToken } from "../../api/authService";
 import SympathyModal from "./modals/SympathyModal";
-import "./MatchSwiper.css";
 import PhotoPreviewGrid from "../shared/components/PhotoPreviewGrid";
+import "./MatchSwiper.css";
+import { useTranslation } from "react-i18next";
 
 const MatchSwiper = () => {
-    const {pet_id} = useParams();
+    const { t } = useTranslation();
+    const { pet_id } = useParams();
     const [matches, setMatches] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [error, setError] = useState(null);
@@ -16,42 +18,33 @@ const MatchSwiper = () => {
     const [sympathyPetData, setSympathyPetData] = useState(null);
     const [showPreview, setShowPreview] = useState(false);
 
-
     useEffect(() => {
         const fetchMatches = async () => {
             try {
                 const response = await axios.get(`http://localhost:8000/matching/match/${pet_id}/`);
                 setMatches(response.data.matches);
             } catch (err) {
-                console.error("Помилка при завантаженні матчів:", err);
-                setError("Не вдалося отримати список підходящих тварин.");
+                console.error("Match fetch error:", err);
+                setError(t("errors.pets.load"));
             }
         };
         fetchMatches();
-    }, [pet_id]);
+    }, [pet_id, t]);
 
     const handleLike = async () => {
         const match = matches[currentIndex];
         try {
             const csrf = await getCsrfToken();
-
             await axios.post(
                 `http://localhost:8000/matching/like/${pet_id}/${match.id}/`,
                 {},
-                {
-                    headers: {"X-CSRFToken": csrf},
-                    withCredentials: true
-                }
+                { headers: { "X-CSRFToken": csrf }, withCredentials: true }
             );
-
 
             const res = await axios.post(
                 `http://localhost:8000/matching/sympathy/${pet_id}/`,
                 {},
-                {
-                    headers: { "X-CSRFToken": csrf },
-                    withCredentials: true
-                }
+                { headers: { "X-CSRFToken": csrf }, withCredentials: true }
             );
 
             const mutual = res.data.sympathys.find(sym =>
@@ -60,17 +53,16 @@ const MatchSwiper = () => {
             );
 
             if (mutual) {
-                const petInfoRes = await axios.get(
-                    `http://localhost:8000/pets/get_pet/${match.id}/`,
-                    {withCredentials: true}
-                );
+                const petInfoRes = await axios.get(`http://localhost:8000/pets/get_pet/${match.id}/`, {
+                    withCredentials: true
+                });
                 setSympathyPetData(petInfoRes.data.report);
                 setShowSympathyModal(true);
             } else {
                 setCurrentIndex(prev => prev + 1);
             }
         } catch (e) {
-            console.error("Помилка при обробці лайку або симпатії:", e);
+            console.error("Like error:", e);
             setCurrentIndex(prev => prev + 1);
         }
     };
@@ -87,13 +79,10 @@ const MatchSwiper = () => {
             await axios.post(
                 `http://localhost:8000/matching/match/${pet_id}/dislike/${match.id}/`,
                 {},
-                {
-                    headers: {"X-CSRFToken": csrf},
-                    withCredentials: true
-                }
+                { headers: { "X-CSRFToken": csrf }, withCredentials: true }
             );
         } catch (e) {
-            console.error("Помилка при дизлайку:", e);
+            console.error("Dislike error:", e);
         } finally {
             setCurrentIndex(prev => prev + 1);
         }
@@ -103,10 +92,10 @@ const MatchSwiper = () => {
     if (matches.length === 0)
         return (
             <div className="match-card">
-                <p className="text-center">Немає доступних тварин для пошуку 😢</p>
+                <p className="text-center">{t("match.no_matches")}</p>
                 <div className="match-back-wrapper">
                     <button className="match-btn match-btn-back" onClick={() => window.location.href = '/profile'}>
-                        ← Повернутись до профілю
+                        {t("match.back_to_profile")}
                     </button>
                 </div>
             </div>
@@ -114,10 +103,10 @@ const MatchSwiper = () => {
     if (currentIndex >= matches.length)
         return (
             <div className="match-card">
-                <p className="text-center">Це були всі 🐾</p>
+                <p className="text-center">{t("match.all_seen")}</p>
                 <div className="match-back-wrapper">
                     <button className="match-btn match-btn-back" onClick={() => window.location.href = '/profile'}>
-                        ← Повернутись до профілю
+                        {t("match.back_to_profile")}
                     </button>
                 </div>
             </div>
@@ -127,11 +116,11 @@ const MatchSwiper = () => {
 
     return (
         <div className="match-card">
-            <h2>{match.species} ({match.gender})</h2>
-            <p><strong>Порода:</strong> {match.breed || "Невідомо"}</p>
-            <p><strong>Колір:</strong> {match.coat_color || "Невідомо"}</p>
-            <p><strong>Вік:</strong> {match.age} міс.</p>
-            <p><strong>Ціна:</strong> {match.price || "Безкоштовно"}</p>
+            <h2>{match.species} ({t(`petcard.gender.${match.gender}`)})</h2>
+            <p><strong>{t("match.breed")}:</strong> {match.breed || t("match.unknown")}</p>
+            <p><strong>{t("match.color")}:</strong> {match.coat_color || t("match.unknown")}</p>
+            <p><strong>{t("match.age")}:</strong> {match.age} міс.</p>
+            <p><strong>{t("match.price")}:</strong> {match.price || t("match.free")}</p>
 
             {match.photos?.length > 0 && (
                 <div className="match-photo-wrapper" onClick={() => setShowPreview(true)}>
@@ -140,7 +129,6 @@ const MatchSwiper = () => {
                         alt="pet"
                         className="match-photo"
                     />
-
                 </div>
             )}
 
@@ -148,25 +136,22 @@ const MatchSwiper = () => {
 
             <div className="match-buttons">
                 <button onClick={handleDislike} className="match-btn match-btn-dislike">
-                    👎 Нецікаво
+                    {t("match.dislike")}
                 </button>
                 <button onClick={handleSkip} className="match-btn match-btn-skip">
-                    ❌ Пропустити
+                    {t("match.skip")}
                 </button>
                 <button onClick={handleLike} className="match-btn match-btn-like">
-                    ❤️ Підходить
+                    {t("match.like")}
                 </button>
             </div>
             <div className="match-back-wrapper">
                 <button className="match-btn match-btn-back" onClick={() => window.location.href = '/profile'}>
-                    ← Повернутись до профілю
+                    {t("match.back_to_profile")}
                 </button>
             </div>
             {showPreview && (
-                <PhotoPreviewGrid
-                    photos={match.photos}
-                    onClose={() => setShowPreview(false)}
-                />
+                <PhotoPreviewGrid photos={match.photos} onClose={() => setShowPreview(false)} />
             )}
             {showSympathyModal && (
                 <SympathyModal
@@ -178,7 +163,6 @@ const MatchSwiper = () => {
                 />
             )}
         </div>
-
     );
 };
 
