@@ -21,7 +21,7 @@ const ChatList = () => {
                 <ul>
                     {chats.map((chat, idx) => (
                         <li key={idx}>
-                            <button onClick={() => navigate(`/chats/${chat.chat_id}`)}>
+                            <button onClick={() => navigate(`/chat/${chat.chat_id}`)}>
                                 З {chat.user_1} та {chat.user_2}
                             </button>
                         </li>
