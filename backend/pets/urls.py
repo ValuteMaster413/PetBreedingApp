@@ -7,5 +7,5 @@ urlpatterns = [
     path('delete_pet/<int:pet_id>/', delete_pet, name='delete_pet'),
     path('all_my_pets/', all_my_pets, name='all_my_pets'),
     path('all_pets/<int:user_id>/', all_pets, name='all_pets'),
-    path('get_pet/', get_pet, name='get_pet'),
+    path('get_pet/<int:pet_id>/', get_pet, name='get_pet'),
 ]

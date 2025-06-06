@@ -46,6 +46,12 @@ def registration_page(request):
 
         if User.objects.filter(username=username).exists():
             return JsonResponse({'error': 'Username already exists'}, status=400)
+        
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({'error': 'Email already registered'}, status=400)
+
+        if UserProfile.objects.filter(phone=phone).exists():
+            return JsonResponse({'error': 'Phone number already registered'}, status=400)
 
         user = User.objects.create_user(username=username, password=password, email=email)
         user.save()
