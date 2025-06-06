@@ -14,7 +14,7 @@ def create_pet(request):
         if not request.user.is_authenticated:
             return JsonResponse({'error': 'User not authenticated'}, status=401)
 
-        data = json.loads(request.body)
+        data = request.POST
         species = data.get('species')
         gender = data.get('gender')
         breed = data.get('breed')
@@ -50,7 +50,7 @@ def edit_pet(request, pet_id):
         
         pet = get_object_or_404(Pet, id=pet_id)
         
-        data = json.loads(request.body)
+        data = request.POST
         files = request.FILES.getlist('photos')
 
         pet.species = data.get('species')

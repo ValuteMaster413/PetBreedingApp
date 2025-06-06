@@ -131,7 +131,7 @@ def get_sympathy(request, pet_id):
                 if not Sympathy.objects.filter(pet1_id=pet1, pet2_id=pet2).exists():
                     Sympathy.objects.create(pet1_id=pet1, pet2_id=pet2)
 
-        return JsonResponse({'success': True})
+        return JsonResponse({'success': True, 'pet1': pet1.id, 'pet2': pet2.id})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
