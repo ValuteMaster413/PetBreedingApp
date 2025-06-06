@@ -17,7 +17,7 @@ const ChatRoom = () => {
     useEffect(() => {
         console.log("🛰 Connecting to chat", chatId); // <-- перевірка chatId
 
-        fetch(`http://localhost:8000/chats/all_messages/${chatId}/`, {
+        fetch(`http://localhost:8000/chat/all_messages/${chatId}/`, {
             credentials: "include"
         })
             .then(res => res.json())
