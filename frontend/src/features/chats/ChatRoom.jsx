@@ -24,7 +24,7 @@ const ChatRoom = () => {
             .then(data => setMessages(data.messages || []))
             .catch(() => alert("Помилка при завантаженні повідомлень"));
 
-        const socket = new WebSocket(`ws://${window.location.hostname}:8000/ws/chats/${chatId}/`);
+        const socket = new WebSocket(`ws://${window.location.hostname}:8000/ws/chat/${chatId}/`);
         socketRef.current = socket;
 
 
