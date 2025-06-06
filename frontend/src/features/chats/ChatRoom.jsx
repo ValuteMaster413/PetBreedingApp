@@ -17,14 +17,14 @@ const ChatRoom = () => {
     useEffect(() => {
         console.log("🛰 Connecting to chat", chatId); // <-- перевірка chatId
 
-        fetch(`http://localhost:8000/chat/all_messages/${chatId}/`, {
+        fetch(`http://localhost:8000/chats/all_messages/${chatId}/`, {
             credentials: "include"
         })
             .then(res => res.json())
             .then(data => setMessages(data.messages || []))
             .catch(() => alert("Помилка при завантаженні повідомлень"));
 
-        const socket = new WebSocket(`ws://${window.location.hostname}:8000/ws/chat/${chatId}/`);
+        const socket = new WebSocket(`ws://${window.location.hostname}:8000/ws/chats/${chatId}/`);
         socketRef.current = socket;
 
 
