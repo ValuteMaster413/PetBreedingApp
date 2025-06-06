@@ -147,7 +147,8 @@ def get_pet(request, pet_id):
             'price': pet.price, 
             'coat_color': pet.coat_color, 
             'age': pet.age,
-            'photos': photos
+            'photos': photos,
+            'owner_id': pet.owner.id,
         }
 
         return JsonResponse({'report': report_data})
