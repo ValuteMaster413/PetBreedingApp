@@ -3,8 +3,9 @@ import axios from "axios";
 import "./LikesModal.css";
 import PhotoPreviewGrid from "../../shared/components/PhotoPreviewGrid";
 import {getCsrfToken} from "../../../api/authService";
+import {useNavigate} from "react-router-dom";
 
-const LikesModal = ({ petId, onClose, onDislike }) => {
+const LikesModal = ({petId, onClose, onDislike}) => {
 
     const [likes, setLikes] = useState([]);
     const [error, setError] = useState(null);
@@ -42,9 +43,7 @@ const LikesModal = ({ petId, onClose, onDislike }) => {
     };
 
 
-
-
-const visibleLikes = likes.filter(like => !ignoredIds.includes(like.from));
+    const visibleLikes = likes.filter(like => !ignoredIds.includes(like.from));
 
     return (
         <div className="modal-backdrop" onClick={onClose}>
@@ -70,7 +69,7 @@ const visibleLikes = likes.filter(like => !ignoredIds.includes(like.from));
     );
 };
 
-const LikeEntry = ({ viewerPetId, petId, onLikeBack, onIgnore }) => {
+const LikeEntry = ({viewerPetId, petId, onLikeBack, onIgnore}) => {
     const [pet, setPet] = useState(null);
     const [openPreview, setOpenPreview] = useState(false);
     const handleDislike = async () => {
@@ -109,7 +108,7 @@ const LikeEntry = ({ viewerPetId, petId, onLikeBack, onIgnore }) => {
             })
             .catch(err => console.error("Не вдалося завантажити тварину", err));
     }, [petId]);
-
+    const navigate = useNavigate();
     if (!pet) return <div className="like-item">Завантаження...</div>;
 
     return (
@@ -134,8 +133,17 @@ const LikeEntry = ({ viewerPetId, petId, onLikeBack, onIgnore }) => {
                         <button onClick={() => alert("Чат недоступний (плейсхолдер)")} className="btn-modal-small">✉
                             Написати
                         </button>
-                        <button onClick={() => window.location.href = `/profile/${pet.owner_id}`}
-                                className="btn-modal-small">👤 Профіль власника
+                        <button
+                            onClick={() => {
+                                if (pet.owner_id) {
+                                    navigate(`/profile/${pet.owner_id}`);
+                                } else {
+                                    alert("ID власника ще не завантажено");
+                                }
+                            }}
+                            className="btn-modal-small"
+                        >
+                            👤 Профіль власника
                         </button>
                     </div>
 

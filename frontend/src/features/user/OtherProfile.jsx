@@ -13,6 +13,7 @@ import ChatButton from "../chats/ChatButton";
 
 const OtherProfile = () => {
     const { userId } = useParams();
+    console.log("👤 userId from params:", userId);
     const [profile, setProfile] = useState(null);
     const [pets, setPets] = useState([]);
     const [error, setError] = useState(null);
