@@ -8,7 +8,7 @@ const ChatButton = ({ targetUserId, targetUsername }) => {
         try {
             const csrf = await getCsrfToken();
 
-            const createRes = await fetch(`http://localhost:8000/chat/create_chat/${targetUserId}/`, {
+            const createRes = await fetch(`http://localhost:8000/chats/create_chat/${targetUserId}/`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
