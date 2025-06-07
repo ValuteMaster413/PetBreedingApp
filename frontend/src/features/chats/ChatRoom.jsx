@@ -4,6 +4,7 @@ import {useTranslation} from "react-i18next";
 import "./ChatRoom.css";
 import EditMessageModal from "./EditMessageModal";
 import "./EditMessageModal.css";
+import Header from "../shared/components/Header";
 
 const ChatRoom = () => {
     const {t} = useTranslation();
@@ -83,54 +84,58 @@ const ChatRoom = () => {
     };
 
     return (
-        <div className="chat-room">
-            <div className="messages-box">
-                {messages.map(msg => {
-                    const senderName = msg.username || msg.sender;
-                    const messageText = msg.message || msg.text;
+        <>
+            <Header/>
+            <div className="chat-room">
+                <div className="messages-box">
+                    {messages.map(msg => {
+                        const senderName = msg.username || msg.sender;
+                        const messageText = msg.message || msg.text;
 
-                    return (
-                        <div
-                            key={msg.message_id}
-                            className={`message-wrapper ${senderName === currentUsername ? "user" : "other"}`}
-                        >
-                            <div className="message">
-                                <strong>{senderName}</strong>
-                                {messageText}
-                            </div>
-                            {senderName === currentUsername && (
-                                <div className="actions">
-                                    <button onClick={() => openEditModal(msg.message_id, messageText)}>
-                                        {t("chatroom.edit_button")}
-                                    </button>
-                                    <button onClick={() => deleteMessage(msg.message_id)}>
-                                        {t("chatroom.delete_button")}
-                                    </button>
+                        return (
+                            <div
+                                key={msg.message_id}
+                                className={`message-wrapper ${senderName === currentUsername ? "user" : "other"}`}
+                            >
+                                <div className="message">
+                                    <strong>{senderName}</strong>
+                                    {messageText}
                                 </div>
-                            )}
-                        </div>
-                    );
-                })}
-                <div ref={bottomRef}></div>
+                                {senderName === currentUsername && (
+                                    <div className="actions">
+                                        <button onClick={() => openEditModal(msg.message_id, messageText)}>
+                                            {t("chatroom.edit_button")}
+                                        </button>
+                                        <button onClick={() => deleteMessage(msg.message_id)}>
+                                            {t("chatroom.delete_button")}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                    <div ref={bottomRef}></div>
+                </div>
+                <div className="input-box">
+                    <input
+                        type="text"
+                        value={text}
+                        onChange={e => setText(e.target.value)}
+                        placeholder={t("chatroom.placeholder")}
+                    />
+                    <button onClick={sendMessage}>{t("chatroom.send")}</button>
+                </div>
+                {editModal.open && (
+                    <EditMessageModal
+                        messageId={editModal.messageId}
+                        initialText={editModal.initialText}
+                        onSave={handleEditSubmit}
+                        onCancel={() => setEditModal({open: false, messageId: null, initialText: ""})}
+                    />
+                )}
             </div>
-            <div className="input-box">
-                <input
-                    type="text"
-                    value={text}
-                    onChange={e => setText(e.target.value)}
-                    placeholder={t("chatroom.placeholder")}
-                />
-                <button onClick={sendMessage}>{t("chatroom.send")}</button>
-            </div>
-            {editModal.open && (
-                <EditMessageModal
-                    messageId={editModal.messageId}
-                    initialText={editModal.initialText}
-                    onSave={handleEditSubmit}
-                    onCancel={() => setEditModal({open: false, messageId: null, initialText: ""})}
-                />
-            )}
-        </div>
+        </>
+
     );
 };
 
