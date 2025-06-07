@@ -170,5 +170,7 @@
   "profile.your_pets": "Your Pets",
   "header.profile": "Profile",
   "header.chats": "Chats",
-  "header.logout": "Log out"
+  "header.logout": "Log out",
+  "reviews.placeholder": "Write your comment here...",
+  "reviews.submit": "Submit"
 }

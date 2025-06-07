@@ -11,7 +11,7 @@ i18n
             uk: { translation: ukTranslation },
         },
         fallbackLng: "en",
-        lng: localStorage.getItem("lang") || "uk", // <- вот это ключ
+        lng: localStorage.getItem("lang") || "uk",
         interpolation: {
             escapeValue: false
         }

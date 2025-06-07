@@ -16,7 +16,9 @@ const Header = () => {
 
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng);
+        localStorage.setItem("lang", lng);
     };
+
 
     return (
         <header className="app-header">

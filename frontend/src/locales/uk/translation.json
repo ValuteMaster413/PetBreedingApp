@@ -170,5 +170,8 @@
   "profile.your_pets": "Ваші тварини",
   "header.profile": "Профіль",
   "header.chats": "Чати",
-  "header.logout": "Вийти"
+  "header.logout": "Вийти",
+  "reviews.placeholder": "Напишіть свій коментар тут...",
+  "reviews.submit": "Надіслати"
+
 }
