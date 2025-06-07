@@ -20,7 +20,9 @@ const RegisterForm = () => {
     const [success, setSuccess] = useState(null);
 
     const handleChange = (e) => {
-        setUserData({ ...userData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        const cleanValue = name === "phone" ? value.replace(/\s/g, "") : value;
+        setUserData({ ...userData, [name]: cleanValue });
     };
 
     const handleSubmit = async (e) => {
