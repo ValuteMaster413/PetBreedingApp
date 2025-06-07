@@ -167,5 +167,8 @@
   "pet.female": "Дівчинка",
   "profile.title": "Профіль",
   "profile.username": "Ім’я користувача",
-  "profile.your_pets": "Ваші тварини"
+  "profile.your_pets": "Ваші тварини",
+  "header.profile": "Профіль",
+  "header.chats": "Чати",
+  "header.logout": "Вийти"
 }

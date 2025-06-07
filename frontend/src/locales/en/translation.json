@@ -167,5 +167,8 @@
   "pet.female": "Female",
   "profile.title": "Profile",
   "profile.username": "Username",
-  "profile.your_pets": "Your Pets"
+  "profile.your_pets": "Your Pets",
+  "header.profile": "Profile",
+  "header.chats": "Chats",
+  "header.logout": "Log out"
 }

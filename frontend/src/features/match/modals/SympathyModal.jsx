@@ -19,6 +19,9 @@ const SympathyModal = ({ pet, onClose, onNext }) => {
                         gender: t(`petcard.gender.${pet.gender}`) || pet.gender
                     })}
                 </p>
+                <p>
+                    <strong>{t("match.age")}:</strong> {t("petcard.age.months", { count: Number(pet.age) })}
+                </p>
 
                 {pet.photos?.length > 0 && (
                     <img

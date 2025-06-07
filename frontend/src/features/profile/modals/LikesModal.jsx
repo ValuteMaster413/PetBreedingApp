@@ -124,7 +124,7 @@ const LikeEntry = ({ viewerPetId, petId, onLikeBack, onIgnore }) => {
                 <div className="like-info">
                     <p><strong>{pet.species}</strong> — {t(`petcard.gender.${pet.gender}`)}</p>
                     <p>{t("likes.breed")}: {pet.breed || t("match.unknown")}</p>
-                    <p>{t("likes.age")}: {pet.age} міс.</p>
+                    <p>{t("likes.age")}: {t("petcard.age.months", { count: Number(pet.age) })}</p>
 
                     <div className="like-buttons">
                         <button onClick={handleDislike} className="btn-modal-ignore">👎 {t("likes.ignore")}</button>

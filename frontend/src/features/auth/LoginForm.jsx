@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import AuthContext from "../../app/context/AuthContext";
 import { useTranslation } from "react-i18next";
 import "./LoginForm.css";
+import LanguageSwitcher from "../shared/components/LanguageSwitcher";
 
 const LoginForm = () => {
     const { t } = useTranslation();
@@ -34,6 +35,7 @@ const LoginForm = () => {
 
     return (
         <div className="login-form">
+            <LanguageSwitcher />
             <h2>{t("login.title")}</h2>
             {error && <p style={{ color: "red" }}>{error}</p>}
             <form onSubmit={handleSubmit}>

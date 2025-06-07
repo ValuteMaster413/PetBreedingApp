@@ -1,10 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import {useContext, useEffect, useState} from "react";
 import AuthContext from "../../../app/context/AuthContext";
 import axios from "axios";
-import { getCsrfToken } from "../../../api/authService";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-
+import {getCsrfToken} from "../../../api/authService";
+import {useNavigate} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 import "./Profile.css";
 import PetCard from "../PetCard";
 import PhotoGallery from "../PhotoGallery";
@@ -12,15 +11,17 @@ import ProfileEditor from "../ProfileEditor";
 import Modal from "../Modal";
 import PetForm from "../PetForm";
 import PetEditor from "../PetEditor";
+import Header from "../../shared/components/Header.jsx";
+
 
 const Profile = () => {
-    const { t } = useTranslation();
-    const { user, signOut } = useContext(AuthContext);
+    const {t} = useTranslation();
+    const {user, signOut} = useContext(AuthContext);
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [editData, setEditData] = useState({ username: "", email: "", phone: "", password: "" });
+    const [editData, setEditData] = useState({username: "", email: "", phone: "", password: ""});
     const [successMessage, setSuccessMessage] = useState("");
     const [pets, setPets] = useState([]);
     const [isCreating, setIsCreating] = useState(false);
@@ -42,7 +43,7 @@ const Profile = () => {
 
     const fetchPets = async () => {
         try {
-            const response = await axios.get("http://localhost:8000/pets/all_my_pets/", { withCredentials: true });
+            const response = await axios.get("http://localhost:8000/pets/all_my_pets/", {withCredentials: true});
             setPets(response.data.reports);
         } catch (e) {
             console.error(t("errors.pets.load"), e);
@@ -58,7 +59,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const response = await axios.get("http://localhost:8000/users/my_info/", { withCredentials: true });
+                const response = await axios.get("http://localhost:8000/users/my_info/", {withCredentials: true});
                 if (response.data.chats?.length > 0) {
                     setProfile(response.data.chats[0]);
                     setEditData({
@@ -97,7 +98,7 @@ const Profile = () => {
 
         try {
             const csrfToken = await getCsrfToken();
-            const payload = { ...editData };
+            const payload = {...editData};
             if (!editData.password.trim()) delete payload.password;
 
             const response = await axios.post(
@@ -112,7 +113,7 @@ const Profile = () => {
             );
 
             if (response.data.success) {
-                setProfile({ ...profile, ...payload });
+                setProfile({...profile, ...payload});
                 setSuccessMessage(t("profile.update_success"));
                 setTimeout(() => setSuccessMessage(""), 3000);
                 setIsEditing(false);
@@ -127,149 +128,154 @@ const Profile = () => {
     if (!profile) return <p className="text-center text-gray-500">{t("profile.not_found")}</p>;
 
     return (
-        <div className="profile-container">
-            <div className="profile-card">
-                <h2 className="profile-title">{t("profile.title")}</h2>
-                {successMessage && <p className="success-message">{successMessage}</p>}
-                <p><strong>{t("profile.username")}:</strong> {profile.username}</p>
-                <p><strong>Email:</strong> {profile.email}</p>
-                <p><strong>{t("profile.phone")}:</strong> {profile.phone}</p>
-                <p><strong>Premium:</strong> {profile.is_premium ? t("profile.premium_active") : t("profile.premium_inactive")}</p>
-                <button className="profile-button btn-blue" onClick={() => setIsEditing(true)}>
-                    {t("buttons.edit")}
-                </button>
-                <button className="profile-button btn-red" onClick={handleLogout}>
-                    {t("buttons.logout")}
-                </button>
-            </div>
-
-            {isEditing && (
-                <ProfileEditor
-                    editData={editData}
-                    setEditData={setEditData}
-                    onSave={handleEdit}
-                    onCancel={() => setIsEditing(false)}
-                    errorMessage={error}
-                    successMessage={successMessage}
-                />
-            )}
-
-            <div className="mt-6 w-full max-w-md">
-                <div className="pet-header">
-                    <h3 className="text-lg font-semibold mb-2">{t("profile.your_pets")}</h3>
-                    <button onClick={() => setIsCreating(true)} className="btn-add-pet">
-                        ➕ {t("buttons.add_pet")}
+        <>
+            <Header/>
+            <div className="profile-container">
+                <div className="profile-card">
+                    <h2 className="profile-title">{t("profile.title")}</h2>
+                    {successMessage && <p className="success-message">{successMessage}</p>}
+                    <p><strong>{t("profile.username")}:</strong> {profile.username}</p>
+                    <p><strong>Email:</strong> {profile.email}</p>
+                    <p><strong>{t("profile.phone")}:</strong> {profile.phone}</p>
+                    <p>
+                        <strong>Premium:</strong> {profile.is_premium ? t("profile.premium_active") : t("profile.premium_inactive")}
+                    </p>
+                    <button className="profile-button btn-blue" onClick={() => setIsEditing(true)}>
+                        {t("buttons.edit")}
+                    </button>
+                    <button className="profile-button btn-red" onClick={handleLogout}>
+                        {t("buttons.logout")}
                     </button>
                 </div>
 
-                {pets.length === 0 ? (
-                    <p className="text-gray-500">{t("profile.no_pets")}</p>
-                ) : (
-                    <div className="space-y-4">
-                        {pets.map((pet, index) => (
-                            <PetCard
-                                key={index}
-                                pet={pet}
-                                onDelete={async () => {
+                {isEditing && (
+                    <ProfileEditor
+                        editData={editData}
+                        setEditData={setEditData}
+                        onSave={handleEdit}
+                        onCancel={() => setIsEditing(false)}
+                        errorMessage={error}
+                        successMessage={successMessage}
+                    />
+                )}
+
+                <div className="mt-6 w-full max-w-md">
+                    <div className="pet-header">
+                        <h3 className="text-lg font-semibold mb-2">{t("profile.your_pets")}</h3>
+                        <button onClick={() => setIsCreating(true)} className="btn-add-pet">
+                            ➕ {t("buttons.add_pet")}
+                        </button>
+                    </div>
+
+                    {pets.length === 0 ? (
+                        <p className="text-gray-500">{t("profile.no_pets")}</p>
+                    ) : (
+                        <div className="space-y-4">
+                            {pets.map((pet, index) => (
+                                <PetCard
+                                    key={index}
+                                    pet={pet}
+                                    onDelete={async () => {
+                                        const csrf = await getCsrfToken();
+                                        await axios.delete(`http://localhost:8000/pets/delete_pet/${pet.id}/`, {
+                                            headers: {"X-CSRFToken": csrf},
+                                            withCredentials: true
+                                        });
+                                        setPets(pets.filter(p => p.id !== pet.id));
+                                    }}
+                                    onEdit={() => {
+                                        setPetToEdit({...pet});
+                                        setIsEditingPet(true);
+                                    }}
+                                    onMatch={() => navigate(`/match/${pet.id}`)}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                {isCreating && (
+                    <Modal onClose={() => {
+                        setIsCreating(false);
+                        setFormErrors({});
+                        setNewPetPhotos([]);
+                    }}>
+                        <PetForm
+                            title={t("pet.new")}
+                            initialPet={newPet}
+                            initialPhotos={newPetPhotos}
+                            formErrors={formErrors}
+                            onCancel={() => {
+                                setIsCreating(false);
+                                setFormErrors({});
+                                setNewPetPhotos([]);
+                            }}
+                            onSave={async (petData, photos) => {
+                                const errors = {};
+                                if (!petData.species?.trim()) errors.species = t("errors.required");
+                                if (!petData.gender?.trim()) errors.gender = t("errors.required");
+                                if (petData.price === "") errors.price = t("errors.required");
+                                else if (isNaN(petData.price)) errors.price = t("errors.must_be_number");
+                                if (petData.age === "") errors.age = t("errors.required");
+                                else if (isNaN(petData.age)) errors.age = t("errors.must_be_number");
+
+                                if (Object.keys(errors).length > 0) {
+                                    setFormErrors(errors);
+                                    return;
+                                }
+
+                                try {
                                     const csrf = await getCsrfToken();
-                                    await axios.delete(`http://localhost:8000/pets/delete_pet/${pet.id}/`, {
-                                        headers: { "X-CSRFToken": csrf },
+                                    const formData = new FormData();
+                                    Object.entries(petData).forEach(([key, value]) => formData.append(key, value));
+                                    photos.forEach(photo => formData.append("photos", photo));
+
+                                    const res = await axios.post("http://localhost:8000/pets/create_pet/", formData, {
+                                        headers: {
+                                            "X-CSRFToken": csrf,
+                                            "Content-Type": "multipart/form-data"
+                                        },
                                         withCredentials: true
                                     });
-                                    setPets(pets.filter(p => p.id !== pet.id));
-                                }}
-                                onEdit={() => {
-                                    setPetToEdit({ ...pet });
-                                    setIsEditingPet(true);
-                                }}
-                                onMatch={() => navigate(`/match/${pet.id}`)}
-                            />
-                        ))}
-                    </div>
+
+                                    if (res.data.success) {
+                                        setIsCreating(false);
+                                        setNewPet({
+                                            species: "", gender: "", breed: "", price: "", coat_color: "", age: ""
+                                        });
+                                        setNewPetPhotos([]);
+                                        setFormErrors({});
+                                        window.location.reload();
+                                    }
+                                } catch (e) {
+                                    console.error(t("errors.pets.create"), e);
+                                }
+                            }}
+                        />
+                    </Modal>
+                )}
+
+                {isEditingPet && petToEdit && (
+                    <Modal onClose={() => {
+                        setIsEditingPet(false);
+                        setPetToEdit(null);
+                        setNewPhotos([]);
+                        setDeletePhotoIds([]);
+                    }}>
+                        <PetEditor
+                            pet={petToEdit}
+                            onUpdate={fetchPets}
+                            onClose={() => {
+                                setIsEditingPet(false);
+                                setPetToEdit(null);
+                                setNewPhotos([]);
+                                setDeletePhotoIds([]);
+                            }}
+                        />
+                    </Modal>
                 )}
             </div>
-
-            {isCreating && (
-                <Modal onClose={() => {
-                    setIsCreating(false);
-                    setFormErrors({});
-                    setNewPetPhotos([]);
-                }}>
-                    <PetForm
-                        title={t("pet.new")}
-                        initialPet={newPet}
-                        initialPhotos={newPetPhotos}
-                        formErrors={formErrors}
-                        onCancel={() => {
-                            setIsCreating(false);
-                            setFormErrors({});
-                            setNewPetPhotos([]);
-                        }}
-                        onSave={async (petData, photos) => {
-                            const errors = {};
-                            if (!petData.species?.trim()) errors.species = t("errors.required");
-                            if (!petData.gender?.trim()) errors.gender = t("errors.required");
-                            if (petData.price === "") errors.price = t("errors.required");
-                            else if (isNaN(petData.price)) errors.price = t("errors.must_be_number");
-                            if (petData.age === "") errors.age = t("errors.required");
-                            else if (isNaN(petData.age)) errors.age = t("errors.must_be_number");
-
-                            if (Object.keys(errors).length > 0) {
-                                setFormErrors(errors);
-                                return;
-                            }
-
-                            try {
-                                const csrf = await getCsrfToken();
-                                const formData = new FormData();
-                                Object.entries(petData).forEach(([key, value]) => formData.append(key, value));
-                                photos.forEach(photo => formData.append("photos", photo));
-
-                                const res = await axios.post("http://localhost:8000/pets/create_pet/", formData, {
-                                    headers: {
-                                        "X-CSRFToken": csrf,
-                                        "Content-Type": "multipart/form-data"
-                                    },
-                                    withCredentials: true
-                                });
-
-                                if (res.data.success) {
-                                    setIsCreating(false);
-                                    setNewPet({
-                                        species: "", gender: "", breed: "", price: "", coat_color: "", age: ""
-                                    });
-                                    setNewPetPhotos([]);
-                                    setFormErrors({});
-                                    window.location.reload();
-                                }
-                            } catch (e) {
-                                console.error(t("errors.pets.create"), e);
-                            }
-                        }}
-                    />
-                </Modal>
-            )}
-
-            {isEditingPet && petToEdit && (
-                <Modal onClose={() => {
-                    setIsEditingPet(false);
-                    setPetToEdit(null);
-                    setNewPhotos([]);
-                    setDeletePhotoIds([]);
-                }}>
-                    <PetEditor
-                        pet={petToEdit}
-                        onUpdate={fetchPets}
-                        onClose={() => {
-                            setIsEditingPet(false);
-                            setPetToEdit(null);
-                            setNewPhotos([]);
-                            setDeletePhotoIds([]);
-                        }}
-                    />
-                </Modal>
-            )}
-        </div>
+        </>
     );
 };
 

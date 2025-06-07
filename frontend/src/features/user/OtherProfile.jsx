@@ -8,6 +8,7 @@ import "./OtherProfile.css";
 import PhotoPreviewGrid from "../shared/components/PhotoPreviewGrid";
 import ReviewsModal from "../profile/modals/ReviewsModal";
 import ChatButton from "../chats/ChatButton";
+import Header from "../shared/components/Header";
 
 const OtherProfile = () => {
     const { t } = useTranslation();
@@ -45,6 +46,8 @@ const OtherProfile = () => {
     if (!profile) return <p>{t("errors.profile.not_found")}</p>;
 
     return (
+        <>
+        <Header/>
         <div className="profile-container">
             <div className="profile-card">
                 <h2 className="profile-title">{profile.username}</h2>
@@ -82,6 +85,7 @@ const OtherProfile = () => {
                 )}
             </div>
         </div>
+        </>
     );
 };
 
@@ -90,6 +94,7 @@ const PetReadonlyCard = ({ pet }) => {
     const [openPreview, setOpenPreview] = useState(false);
 
     return (
+
         <div className="pet-card">
             <p><strong>{t("petcard.species")}:</strong> {pet.species}</p>
             <p><strong>{t("petcard.gender")}:</strong> {pet.gender}</p>
