@@ -18,7 +18,7 @@
   "chat_button.error_failed": "Не вдалося створити чат.",
   "chatlist.title": "Ваші чати",
   "chatlist.empty": "Чатів ще немає",
-  "chatlist.with_users": "З {user1} та {user2}",
+  "chatlist.with_users": "З {{user1}}",
   "chatlist.error_loading": "Не вдалося завантажити чати",
   "chatroom.placeholder": "Написати повідомлення...",
   "chatroom.send": "Надіслати",

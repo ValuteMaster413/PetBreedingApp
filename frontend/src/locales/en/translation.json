@@ -18,7 +18,7 @@
   "chat_button.error_failed": "Failed to create chat.",
   "chatlist.title": "Your Chats",
   "chatlist.empty": "No chats yet",
-  "chatlist.with_users": "With {user1} and {user2}",
+  "chatlist.with_users": "With {{user1}}  ",
   "chatlist.error_loading": "Failed to load chats",
   "chatroom.placeholder": "Type a message...",
   "chatroom.send": "Send",
