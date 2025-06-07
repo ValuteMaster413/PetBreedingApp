@@ -74,7 +74,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.channel_layer.group_send(self.room_group_name, {
             'type': 'chat_message',
-            'message': json.dumps(response)
+            'message': response
         })
 
     async def edit_message(self, data):
@@ -103,7 +103,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
             await self.channel_layer.group_send(self.room_group_name, {
                 'type': 'chat_message',
-                'message': json.dumps(response)
+                'message': response
             })
 
         except Message.DoesNotExist:
@@ -132,7 +132,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
             await self.channel_layer.group_send(self.room_group_name, {
                 'type': 'chat_message',
-                'message': json.dumps(response)
+                'message': response
             })
 
         except Message.DoesNotExist:
@@ -151,9 +151,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message.delete()
 
     async def chat_message(self, event):
-        message = event['message']
-        await self.send(text_data=message)
-
+        await self.send(text_data=json.dumps(event['message']))
+        
     async def send_error(self, message):
         await self.send(text_data=json.dumps({
             'type': 'error',
