@@ -1,19 +1,31 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+import {useParams} from "react-router-dom";
+import {useEffect, useRef, useState} from "react";
+import {useTranslation} from "react-i18next";
 import "./ChatRoom.css";
 import EditMessageModal from "./EditMessageModal";
 import "./EditMessageModal.css";
 
 const ChatRoom = () => {
-    const { t } = useTranslation();
-    const { chatId } = useParams();
+    const {t} = useTranslation();
+    const {chatId} = useParams();
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
     const socketRef = useRef(null);
     const bottomRef = useRef(null);
-    const [editModal, setEditModal] = useState({ open: false, messageId: null, initialText: "" });
+    const [editModal, setEditModal] = useState({open: false, messageId: null, initialText: ""});
     const [currentUsername, setCurrentUsername] = useState("");
+
+    useEffect(() => {
+        fetch(`http://localhost:8000/users/my_info/`, {credentials: "include"})
+            .then(res => res.json())
+            .then(data => {
+                if (data.chats && data.chats.length > 0) {
+                    setCurrentUsername(data.chats[0].username);
+                    console.log(data.chats[0].username);
+                }
+            })
+            .catch(() => console.error(t("chatroom.error_username")));
+    }, [t]);
 
     useEffect(() => {
         fetch(`http://localhost:8000/chats/all_messages/${chatId}/`, {
@@ -22,7 +34,9 @@ const ChatRoom = () => {
             .then(res => res.json())
             .then(data => setMessages(data.messages || []))
             .catch(() => alert(t("chatroom.error_messages")));
+    }, [chatId, t]);
 
+    useEffect(() => {
         const socket = new WebSocket(`ws://${window.location.hostname}:8000/ws/chat/${chatId}/`);
         socketRef.current = socket;
 
@@ -30,75 +44,73 @@ const ChatRoom = () => {
             const data = JSON.parse(event.data);
             setMessages(prev => {
                 if (data.action === "send") return [...prev, data];
-                if (data.action === "edit") return prev.map(m => m.message_id === data.message_id ? { ...m, text: data.text } : m);
+                if (data.action === "edit") return prev.map(m =>
+                    m.message_id === data.message_id ? {...m, message: data.message} : m
+                );
                 if (data.action === "delete") return prev.filter(m => m.message_id !== data.message_id);
                 return prev;
             });
         };
-
         return () => socket.close();
     }, [chatId]);
 
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+        bottomRef.current?.scrollIntoView({behavior: "smooth"});
     }, [messages]);
-
-    useEffect(() => {
-        fetch("http://localhost:8000/users/my_info/", { credentials: "include" })
-            .then(res => res.json())
-            .then(data => {
-                if (data.chats && data.chats.length > 0) {
-                    setCurrentUsername(data.chats[0].username);
-                }
-            })
-            .catch(() => console.error(t("chatroom.error_username")));
-    }, []);
 
     const sendMessage = () => {
         if (text.trim() && socketRef.current?.readyState === WebSocket.OPEN) {
-            socketRef.current.send(JSON.stringify({ action: "send", message: text }));
+            socketRef.current.send(JSON.stringify({action: "send", message: text}));
             setText("");
-            setTimeout(() => window.location.reload(), 100); // TODO: переробити на state-based
         }
     };
 
     const openEditModal = (id, text) => {
-        setEditModal({ open: true, messageId: id, initialText: text });
+        setEditModal({open: true, messageId: id, initialText: text});
     };
 
     const handleEditSubmit = (id, newText) => {
         if (socketRef.current?.readyState === WebSocket.OPEN) {
-            socketRef.current.send(JSON.stringify({ action: "edit", message_id: id, message: newText }));
+            socketRef.current.send(JSON.stringify({action: "edit", message_id: id, message: newText}));
         }
-        setEditModal({ open: false, messageId: null, initialText: "" });
+        setEditModal({open: false, messageId: null, initialText: ""});
     };
 
     const deleteMessage = (id) => {
         if (socketRef.current?.readyState === WebSocket.OPEN) {
-            socketRef.current.send(JSON.stringify({ action: "delete", message_id: id }));
+            socketRef.current.send(JSON.stringify({action: "delete", message_id: id}));
         }
     };
 
     return (
         <div className="chat-room">
             <div className="messages-box">
-                {messages.map(msg => (
-                    <div
-                        key={msg.message_id}
-                        className={`message-wrapper ${msg.sender === currentUsername ? "user" : "other"}`}
-                    >
-                        <div className="message">
-                            <strong>{msg.sender}</strong>
-                            {msg.text}
-                        </div>
-                        {msg.sender === currentUsername && (
-                            <div className="actions">
-                                <button onClick={() => openEditModal(msg.message_id, msg.text)}>{t("chatroom.edit_button")}</button>
-                                <button onClick={() => deleteMessage(msg.message_id)}>{t("chatroom.delete_button")}</button>
+                {messages.map(msg => {
+                    const senderName = msg.username || msg.sender;
+                    const messageText = msg.message || msg.text;
+
+                    return (
+                        <div
+                            key={msg.message_id}
+                            className={`message-wrapper ${senderName === currentUsername ? "user" : "other"}`}
+                        >
+                            <div className="message">
+                                <strong>{senderName}</strong>
+                                {messageText}
                             </div>
-                        )}
-                    </div>
-                ))}
+                            {senderName === currentUsername && (
+                                <div className="actions">
+                                    <button onClick={() => openEditModal(msg.message_id, messageText)}>
+                                        {t("chatroom.edit_button")}
+                                    </button>
+                                    <button onClick={() => deleteMessage(msg.message_id)}>
+                                        {t("chatroom.delete_button")}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
                 <div ref={bottomRef}></div>
             </div>
             <div className="input-box">
@@ -115,7 +127,7 @@ const ChatRoom = () => {
                     messageId={editModal.messageId}
                     initialText={editModal.initialText}
                     onSave={handleEditSubmit}
-                    onCancel={() => setEditModal({ open: false, messageId: null, initialText: "" })}
+                    onCancel={() => setEditModal({open: false, messageId: null, initialText: ""})}
                 />
             )}
         </div>

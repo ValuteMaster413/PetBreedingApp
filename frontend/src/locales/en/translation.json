@@ -107,7 +107,7 @@
   "peteditor.save": "Save",
   "peteditor.saving": "Saving...",
   "peteditor.cancel": "Cancel",
-  "petform.new": "New Pet",
+  "pet.new": "New Pet",
   "petform.gender.placeholder": "Select gender",
   "photopreview.title": "All Pet Photos",
   "profileeditor.title": "Edit Profile",
@@ -173,4 +173,5 @@
   "header.logout": "Log out",
   "reviews.placeholder": "Write your comment here...",
   "reviews.submit": "Submit"
+
 }
