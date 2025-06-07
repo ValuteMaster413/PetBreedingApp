@@ -69,7 +69,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'action': 'send',
             'message_id': message.id,
             'message': message.text,
-            'sender_id': self.user.id
+            'sender_id': self.user.id,
+            'username': self.user.username
         }
 
         await self.channel_layer.group_send(self.room_group_name, {
