@@ -175,6 +175,6 @@
   "reviews.submit": "Submit",
   "reviews.from": "From",
   "reviews.self_review_error": "You cannot leave a review for yourself.",
-  "reviews.already_left": "You have already left a review."
-
+  "reviews.already_left": "You have already left a review.",
+  "reviews.empty": "No reviews yet"
 }

@@ -5,6 +5,7 @@ import PhotoPreviewGrid from "../../shared/components/PhotoPreviewGrid";
 import { getCsrfToken } from "../../../api/authService";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import ChatButton from "../../chats/ChatButton";
 
 const LikesModal = ({ petId, onClose, onDislike }) => {
     const { t } = useTranslation();
@@ -128,7 +129,7 @@ const LikeEntry = ({ viewerPetId, petId, onLikeBack, onIgnore }) => {
 
                     <div className="like-buttons">
                         <button onClick={handleDislike} className="btn-modal-ignore">👎 {t("likes.ignore")}</button>
-                        <button onClick={() => alert(t("chat_button.send_message"))} className="btn-modal-small">✉ {t("likes.message")}</button>
+                        <ChatButton targetUserId={pet.owner_id} targetUsername={pet.owner_username} />
                         <button
                             onClick={() => {
                                 if (pet.owner_id) {

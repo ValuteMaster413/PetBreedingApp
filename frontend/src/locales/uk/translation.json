@@ -176,5 +176,6 @@
   "pet.new": "Нова тварина",
   "reviews.from": "Від",
   "reviews.self_review_error": "Ви не можете залишити відгук самі собі.",
-  "reviews.already_left": "Ви вже залишили відгук."
+  "reviews.already_left": "Ви вже залишили відгук.",
+  "reviews.empty": "Ще немає відгуків"
 }
