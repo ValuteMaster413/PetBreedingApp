@@ -13,17 +13,24 @@ const ReviewsModal = ({userId, onClose}) => {
     const [editRating, setEditRating] = useState(5);
     const [editComment, setEditComment] = useState("");
     const [currentUserId, setCurrentUserId] = useState(null);
+    const [hasMyReview, setHasMyReview] = useState(false);
+    const [isSelfProfile, setIsSelfProfile] = useState(false);
+
 
     useEffect(() => {
-        fetchReviews();
-    }, [userId]);
+        if (currentUserId !== null) {
+            loadReviews();
+        }
+    }, [userId, currentUserId]);
 
     useEffect(() => {
         fetch("http://localhost:8000/users/my_info/", {credentials: "include"})
             .then(res => res.json())
             .then(data => {
                 if (data.chats && data.chats.length > 0) {
-                    setCurrentUserId(data.chats[0].user_id);
+                    const myId = data.chats[0].user_id;
+                    setCurrentUserId(myId);
+                    setIsSelfProfile(myId === parseInt(userId)); // userId — проп з URL
                 }
             })
             .catch(() => console.error(t("errors.user_info")));
@@ -33,8 +40,10 @@ const ReviewsModal = ({userId, onClose}) => {
         fetch(`http://localhost:8000/users/all_review/${userId}/`, {credentials: "include"})
             .then(res => res.json())
             .then(data => {
-                if (data.reports) setReviews(data.reports);
-                else setError(t("reviews.load_fail"));
+                if (data.reports) {
+                    setReviews(data.reports);
+                    setHasMyReview(data.reports.some(r => r.reviewer === currentUserId));
+                } else setError(t("reviews.load_fail"));
             })
             .catch(() => setError(t("reviews.load_error")));
     };
@@ -89,6 +98,20 @@ const ReviewsModal = ({userId, onClose}) => {
             fetchReviews();
         } else alert(t("reviews.edit_fail"));
     };
+    const loadReviews = () => {
+        fetch(`http://localhost:8000/users/all_review/${userId}/`, {credentials: "include"})
+            .then(res => res.json())
+            .then(data => {
+                if (data.reports) {
+                    setReviews(data.reports);
+                    const hasReview = data.reports.some(r => r.reviewer === currentUserId);
+                    setHasMyReview(hasReview);
+                } else {
+                    setError(t("reviews.load_fail"));
+                }
+            })
+            .catch(() => setError(t("reviews.load_error")));
+    };
 
     return (
         <div className="modal-backdrop" onClick={onClose}>
@@ -96,26 +119,32 @@ const ReviewsModal = ({userId, onClose}) => {
                 <h3 className="modal-title">{t("reviews.title")}</h3>
 
                 <div className="add-review-form">
-                    <h4>{t("reviews.leave")}</h4>
-                    <label>
-                        {t("reviews.rating")}:
-                        <select value={newRating} onChange={e => setNewRating(Number(e.target.value))}>
-                            {[1, 2, 3, 4, 5].map(val => (
-                                <option key={val} value={val}>{val}</option>
-                            ))}
-                        </select>
-                    </label>
-                    <label>
-                        {t("reviews.comment")}:
-                        <textarea
-                            value={newComment}
-                            onChange={e => setNewComment(e.target.value)}
-                            placeholder={t("reviews.placeholder")}
-                        />
-                    </label>
-                    <button className="btn-add-review" onClick={handleAddReview}>
-                        {t("reviews.submit")}
-                    </button>
+                    {!isSelfProfile && !hasMyReview && (
+                        <>
+                            <h4>{t("reviews.leave")}</h4>
+                            <label>
+                                {t("reviews.rating")}:
+                                <select value={newRating} onChange={e => setNewRating(Number(e.target.value))}>
+                                    {[1, 2, 3, 4, 5].map(val => (
+                                        <option key={val} value={val}>{val}</option>
+                                    ))}
+                                </select>
+                            </label>
+                            <label>
+                                {t("reviews.comment")}:
+                                <textarea
+                                    value={newComment}
+                                    onChange={e => setNewComment(e.target.value)}
+                                    placeholder={t("reviews.placeholder")}
+                                />
+                            </label>
+                            <button className="btn-add-review" onClick={handleAddReview}>
+                                {t("reviews.submit")}
+                            </button>
+                        </>
+                    )}
+                    {isSelfProfile && <p className="text-gray-500">{t("reviews.self_review_error")}</p>}
+                    {hasMyReview && <p className="text-gray-500">{t("reviews.already_left")}</p>}
                 </div>
 
                 {error && <p className="text-red-500">{error}</p>}
@@ -151,6 +180,9 @@ const ReviewsModal = ({userId, onClose}) => {
                                 </>
                             ) : (
                                 <>
+                                    <p>
+                                        <strong>{t("reviews.from")}:</strong> {review.reviewer_username}
+                                    </p>
                                     <p><strong>{t("reviews.rating")}:</strong> {review.rating} ⭐</p>
                                     <p>
                                         <strong>{t("reviews.comment")}:</strong> {review.comment || t("reviews.no_comment")}
