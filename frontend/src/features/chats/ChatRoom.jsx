@@ -1,11 +1,10 @@
-import {useParams, useNavigate} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {useEffect, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import "./ChatRoom.css";
 import EditMessageModal from "./EditMessageModal";
 import "./EditMessageModal.css";
 import Header from "../shared/components/Header";
-
 
 const ChatRoom = () => {
     const {t} = useTranslation();
@@ -16,7 +15,10 @@ const ChatRoom = () => {
     const bottomRef = useRef(null);
     const [editModal, setEditModal] = useState({open: false, messageId: null, initialText: ""});
     const [currentUsername, setCurrentUsername] = useState("");
+    const [chatInfo, setChatInfo] = useState(null);
     const navigate = useNavigate();
+    const [otherUserId, setOtherUserId] = useState(null);
+
     useEffect(() => {
         fetch(`http://localhost:8000/users/my_info/`, {credentials: "include"})
             .then(res => res.json())
@@ -28,6 +30,26 @@ const ChatRoom = () => {
             })
             .catch(() => console.error(t("chatroom.error_username")));
     }, [t]);
+
+    useEffect(() => {
+        fetch(`http://localhost:8000/chats/chat_info/${chatId}/`, {
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(data => {
+                setChatInfo(data.chats);
+                console.log(data.chats);
+                const myUsername = currentUsername;
+                const isUser1 = data.user_1_username === myUsername;
+
+                const opponentId = isUser1 ? data.user_2_id : data.user_1_id;
+                setOtherUserId(opponentId);
+
+            })
+            .catch(err => {
+                console.error("Failed to load chat info:", err);
+            });
+    }, [chatId, currentUsername]);
 
     useEffect(() => {
         fetch(`http://localhost:8000/chats/all_messages/${chatId}/`, {
@@ -84,19 +106,6 @@ const ChatRoom = () => {
         }
     };
 
-    const fetchUserIdByUsername = async (username) => {
-        try {
-            const res = await fetch(`http://localhost:8000/users/find_id/?username=${username}`, {
-                credentials: "include"
-            });
-            const data = await res.json();
-            return data.user_id;
-        } catch (e) {
-            console.error("Failed to fetch user ID:", e);
-            return null;
-        }
-    };
-
     return (
         <>
             <Header/>
@@ -112,19 +121,25 @@ const ChatRoom = () => {
                                 className={`message-wrapper ${senderName === currentUsername ? "user" : "other"}`}
                             >
                                 <div className="message">
-                                    <strong
-                                        className="sender-link"
-                                        style={{ cursor: "pointer", color: "#2563eb" }}
-                                        onClick={async () => {
-                                            const op_sender = msg.username || msg.sender;
-                                            if (op_sender !== currentUsername) {
-                                                const userId = await fetchUserIdByUsername(op_sender);
-                                                if (userId) navigate(`/profile/${userId}`);
-                                            }
-                                        }}
-                                    >
-                                        {senderName}
-                                    </strong>{" "}
+                                    {senderName === currentUsername ? (
+                                        <strong>{senderName}</strong>
+                                    ) : (
+                                        <strong
+                                            className="sender-link"
+                                            style={{ cursor: "pointer", color: "#2563eb" }}
+                                            onClick={() => {
+                                                if (!chatInfo) return;
+
+                                                const other = chatInfo.user_1.username === currentUsername
+                                                    ? chatInfo.user_2
+                                                    : chatInfo.user_1;
+
+                                                navigate(`/profile/${other.id}`);
+                                            }}
+                                        >
+                                            {senderName}
+                                        </strong>
+                                    )}
                                     {messageText}
                                 </div>
                                 {senderName === currentUsername && (
