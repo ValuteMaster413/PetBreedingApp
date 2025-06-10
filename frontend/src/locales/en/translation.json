@@ -18,7 +18,6 @@
   "chat_button.error_failed": "Failed to create chat.",
   "chatlist.title": "Your Chats",
   "chatlist.empty": "No chats yet",
-  "chatlist.with_users": "With {{user1}}  ",
   "chatlist.error_loading": "Failed to load chats",
   "chatroom.placeholder": "Type a message...",
   "chatroom.send": "Send",
@@ -176,5 +175,6 @@
   "reviews.from": "From",
   "reviews.self_review_error": "You cannot leave a review for yourself.",
   "reviews.already_left": "You have already left a review.",
-  "reviews.empty": "No reviews yet"
+  "reviews.empty": "No reviews yet",
+  "chatlist.with_user": "With {{username}}"
 }

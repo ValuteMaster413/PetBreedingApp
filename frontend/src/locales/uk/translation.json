@@ -18,7 +18,6 @@
   "chat_button.error_failed": "Не вдалося створити чат.",
   "chatlist.title": "Ваші чати",
   "chatlist.empty": "Чатів ще немає",
-  "chatlist.with_users": "З {{user1}}",
   "chatlist.error_loading": "Не вдалося завантажити чати",
   "chatroom.placeholder": "Написати повідомлення...",
   "chatroom.send": "Надіслати",
@@ -177,5 +176,7 @@
   "reviews.from": "Від",
   "reviews.self_review_error": "Ви не можете залишити відгук самі собі.",
   "reviews.already_left": "Ви вже залишили відгук.",
-  "reviews.empty": "Ще немає відгуків"
+  "reviews.empty": "Ще немає відгуків",
+  "chatlist.with_user": "З {{username}}"
+
 }
