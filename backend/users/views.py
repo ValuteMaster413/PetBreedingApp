@@ -241,7 +241,7 @@ def edit_review(request, review_id):
         comment = data.get('comment')
 
         review = get_object_or_404(Review, id=review_id)
-        if review.reviewer == request.user:
+        if review.reviewer != request.user:
             return JsonResponse({'error': 'That is not your review'}, status=405)
         else:
             review.rating = rating
