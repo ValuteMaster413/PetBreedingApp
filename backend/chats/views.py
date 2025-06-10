@@ -37,14 +37,14 @@ def chat_info(request, chat_id):
 
         chat=Chat.objects.filter(id=chat_id).first()
         
-        chat_info = [
-            {
-                "chat_id": chat.id,
-                "user_1": chat.user_1.username,
-                "user_2": chat.user_2.username,
-                "created_at": chat.created_at.strftime('%Y-%m-%d %H:%M:%S')
-            }
-        ]
+        chat_info = {
+            "chat_id": chat.id,
+            "user_1_id": chat.user_1.id,
+            "user_1_username": chat.user_1.username,
+            "user_2_id": chat.user_2.id,
+            "user_2_username": chat.user_2.username,
+            "created_at": chat.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
 
         return JsonResponse({"chats": chat_info})
     else:
