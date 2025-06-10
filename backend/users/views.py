@@ -279,6 +279,7 @@ def all_review(request, user_id):
             'comment': review.comment, 
             'created_at': review.created_at, 
             'reviewer': review.reviewer.id,
+            'reviewer_username': review.reviewer.username,
         } for review in reviews]
         
         return JsonResponse({'reports': reviews_list})
