@@ -1,10 +1,11 @@
-import {useParams} from "react-router-dom";
+import {useParams, useNavigate} from "react-router-dom";
 import {useEffect, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import "./ChatRoom.css";
 import EditMessageModal from "./EditMessageModal";
 import "./EditMessageModal.css";
 import Header from "../shared/components/Header";
+
 
 const ChatRoom = () => {
     const {t} = useTranslation();
@@ -15,14 +16,14 @@ const ChatRoom = () => {
     const bottomRef = useRef(null);
     const [editModal, setEditModal] = useState({open: false, messageId: null, initialText: ""});
     const [currentUsername, setCurrentUsername] = useState("");
-
+    const navigate = useNavigate();
     useEffect(() => {
         fetch(`http://localhost:8000/users/my_info/`, {credentials: "include"})
             .then(res => res.json())
             .then(data => {
                 if (data.chats && data.chats.length > 0) {
                     setCurrentUsername(data.chats[0].username);
-                    console.log(data.chats[0].username);
+
                 }
             })
             .catch(() => console.error(t("chatroom.error_username")));
@@ -83,6 +84,19 @@ const ChatRoom = () => {
         }
     };
 
+    const fetchUserIdByUsername = async (username) => {
+        try {
+            const res = await fetch(`http://localhost:8000/users/find_id/?username=${username}`, {
+                credentials: "include"
+            });
+            const data = await res.json();
+            return data.user_id;
+        } catch (e) {
+            console.error("Failed to fetch user ID:", e);
+            return null;
+        }
+    };
+
     return (
         <>
             <Header/>
@@ -98,7 +112,19 @@ const ChatRoom = () => {
                                 className={`message-wrapper ${senderName === currentUsername ? "user" : "other"}`}
                             >
                                 <div className="message">
-                                    <strong>{senderName}</strong>
+                                    <strong
+                                        className="sender-link"
+                                        style={{ cursor: "pointer", color: "#2563eb" }}
+                                        onClick={async () => {
+                                            const op_sender = msg.username || msg.sender;
+                                            if (op_sender !== currentUsername) {
+                                                const userId = await fetchUserIdByUsername(op_sender);
+                                                if (userId) navigate(`/profile/${userId}`);
+                                            }
+                                        }}
+                                    >
+                                        {senderName}
+                                    </strong>{" "}
                                     {messageText}
                                 </div>
                                 {senderName === currentUsername && (

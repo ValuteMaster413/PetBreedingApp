@@ -47,9 +47,9 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
 
             {pet.photos?.length > 0 && (
                 <>
-                    <div className="pet-photo-preview">
+                    <div className="pet-photo-preview" style={{ position: "relative" }}>
                         <img
-                            src={`http://localhost:8000${pet.photos[0].url}`}
+                            src={`http://localhost:8000${pet.photos[0]}`}
                             alt="preview"
                             className="pet-photo"
                             onClick={() => setOpenPreview(true)}
@@ -63,7 +63,7 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
 
                     {openPreview && (
                         <PhotoPreviewGrid
-                            photos={pet.photos}
+                            photos={pet.photos.map(url => ({ url }))}
                             onClose={() => setOpenPreview(false)}
                         />
                     )}

@@ -81,23 +81,30 @@ const ReviewsModal = ({userId, onClose}) => {
 
     const handleEditReview = async () => {
         const csrf = await getCsrfToken();
-        const res = await fetch(`http://localhost:8000/users/edit_review/${editingReviewId}/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrf
-            },
-            credentials: "include",
-            body: JSON.stringify({rating: editRating, comment: editComment})
-        });
-        const data = await res.json();
-        if (data.success) {
-            setEditingReviewId(null);
-            setEditRating(5);
-            setEditComment("");
-            fetchReviews();
-        } else alert(t("reviews.edit_fail"));
+        try {
+            const res = await fetch(`http://localhost:8000/users/edit_review/${editingReviewId}/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrf
+                },
+                credentials: "include",
+                body: JSON.stringify({ rating: editRating, comment: editComment })
+            });
+            const data = await res.json();
+            if (res.ok && data.success) {
+                setEditingReviewId(null);
+                setEditRating(5);
+                setEditComment("");
+                fetchReviews();
+            } else {
+                alert(data.error || t("reviews.edit_fail"));
+            }
+        } catch (err) {
+            alert(t("reviews.edit_fail"));
+        }
     };
+
     const loadReviews = () => {
         fetch(`http://localhost:8000/users/all_review/${userId}/`, {credentials: "include"})
             .then(res => res.json())
