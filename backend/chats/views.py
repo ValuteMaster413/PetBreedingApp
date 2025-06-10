@@ -30,6 +30,26 @@ def all_chats(request):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+def chat_info(request, chat_id):
+    if request.method == "GET":
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'User not authenticated'}, status=401)
+
+        chat=Chat.objects.filter(id=chat_id).first()
+        
+        chat_info = [
+            {
+                "chat_id": chat.id,
+                "user_1": chat.user_1.username,
+                "user_2": chat.user_2.username,
+                "created_at": chat.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            }
+        ]
+
+        return JsonResponse({"chats": chat_info})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 def create_chat(request, user_id):
     if request.method == "POST":
         if not request.user.is_authenticated:
