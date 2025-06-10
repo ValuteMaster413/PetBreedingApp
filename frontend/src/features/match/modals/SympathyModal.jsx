@@ -32,8 +32,8 @@ const SympathyModal = ({ pet, onClose, onNext }) => {
                 )}
 
                 <div className="modal-buttons">
-                    <button onClick={() => navigate(`/pets/${pet.id}`)} className="btn-modal">
-                        {t("pet.owner_profile")}
+                        <button onClick={() => navigate(`/pets/${pet.id}`)} className="btn-modal">
+                        {t("pet.pet_profile")}
                     </button>
                     <button onClick={() => navigate(`/chat?to=${pet.owner_id}`)} className="btn-modal">
                         ✉ {t("chat_button.send_message")}

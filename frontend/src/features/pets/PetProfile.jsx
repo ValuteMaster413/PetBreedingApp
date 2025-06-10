@@ -1,16 +1,33 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import PhotoPreviewGrid from "../shared/components/PhotoPreviewGrid";
+import {useTranslation} from "react-i18next";
 import "./PetProfile.css";
-import { useTranslation } from "react-i18next";
+import Header from "../shared/components/Header";
+import ChatButton from "../chats/ChatButton";
 
 const PetProfile = () => {
-    const { t } = useTranslation();
-    const { petId } = useParams();
+    const {t} = useTranslation();
+    const {petId} = useParams();
     const [pet, setPet] = useState(null);
     const [error, setError] = useState(null);
     const [showGallery, setShowGallery] = useState(false);
+    const [likesCount, setLikesCount] = useState(0);
+    const navigate = useNavigate();
+
+    const formatAge = (months) => {
+        if (months < 1) return t("petcard.age.less_than_month");
+        if (months === 6) return t("petcard.age.half_year");
+        if (months < 12) return t("petcard.age.months", {count: months});
+        if (months % 12 === 0) {
+            const years = months / 12;
+            return t("petcard.age.years", {count: years});
+        }
+        const years = Math.floor(months / 12);
+        const remainingMonths = months % 12;
+        return t("petcard.age.years_months", {years, months: remainingMonths});
+    };
 
     useEffect(() => {
         const fetchPet = async () => {
@@ -21,9 +38,17 @@ const PetProfile = () => {
                 const data = response.data.report;
                 const transformed = {
                     ...data,
-                    photos: data.photos.map(p => ({ url: p }))
+                    photos: data.photos.map(p => ({url: p}))
                 };
                 setPet(transformed);
+
+                const likesResponse = await axios.get(
+                    `http://localhost:8000/matching/likes_to_me/${petId}/`,
+                    {withCredentials: true}
+                );
+                if (Array.isArray(likesResponse.data.likes_to_me)) {
+                    setLikesCount(likesResponse.data.likes_to_me.length);
+                }
             } catch (e) {
                 console.error("Failed to fetch pet profile", e);
                 setError(t("errors.pets.load"));
@@ -37,47 +62,74 @@ const PetProfile = () => {
     if (!pet) return <p className="text-center mt-6">{t("likes.loading")}</p>;
 
     return (
-        <div className="max-w-md mx-auto bg-white shadow rounded p-6 mt-8">
-            <h2 className="text-2xl font-bold mb-4 text-center">{t("pet.profile_title")}</h2>
+        <>
+            <Header/>
+            <div className="pet-profile-container">
+                <div className="pet-card">
+                    <div className="pet-header">
+                        <h2 className="text-2xl font-bold mb-4 text-center">{t("pet.profile_title")}</h2>
+                    </div>
 
-            <p><strong>{t("pet.species")}:</strong> {pet.species}</p>
-            <p><strong>{t("pet.gender")}:</strong> {t(`petcard.gender.${pet.gender}`)}</p>
-            <p><strong>{t("pet.breed")}:</strong> {pet.breed || t("match.unknown")}</p>
-            <p><strong>{t("pet.color")}:</strong> {pet.coat_color || t("match.unknown")}</p>
-            <p><strong>{t("pet.price")}:</strong> {pet.price || t("match.free")}</p>
-            <p><strong>{t("pet.age")}:</strong> {pet.age} міс.</p>
-            <p>
-                <strong>{t("pet.owner_profile")}:</strong>{" "}
-                <a
-                    href={`/user/${pet.owner_id}`}
-                    className="text-blue-600 underline hover:text-blue-800"
-                >
-                    {t("pet.owner_profile")}
-                </a>
-            </p>
+                    {pet.photos?.length > 0 && (
+                        <>
+                            <div className="pet-photo-preview" style={{position: "relative"}}>
+                                <img
+                                    src={`http://localhost:8000${pet.photos[0].url}`}
+                                    alt="preview"
+                                    className="pet-photo"
+                                    onClick={() => setShowGallery(true)}
+                                />
+                                {pet.photos.length > 1 && (
+                                    <div className="photo-count-overlay">
+                                        +{pet.photos.length - 1}
+                                    </div>
+                                )}
+                            </div>
 
-            {pet.photos?.length > 0 && (
-                <div className="mt-4 cursor-pointer relative" onClick={() => setShowGallery(true)}>
-                    <img
-                        src={`http://localhost:8000${pet.photos[0].url}`}
-                        alt="pet"
-                        className="w-full h-64 object-cover rounded"
-                    />
-                    {pet.photos.length > 1 && (
-                        <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-                            +{pet.photos.length - 1}
-                        </div>
+                            {showGallery && (
+                                <PhotoPreviewGrid
+                                    photos={pet.photos}
+                                    onClose={() => setShowGallery(false)}
+                                />
+                            )}
+                        </>
                     )}
-                </div>
-            )}
 
-            {showGallery && (
-                <PhotoPreviewGrid
-                    photos={pet.photos}
-                    onClose={() => setShowGallery(false)}
-                />
-            )}
-        </div>
+                    <div className="pet-details">
+                        <p><strong>{t("petcard.species")}:</strong> {pet.species}</p>
+                        <p><strong>{t("petcard.gender")}:</strong> {t(`petcard.gender.${pet.gender}`)}</p>
+                        <p><strong>{t("petcard.breed")}:</strong> {pet.breed || t("petcard.unknown")}</p>
+                        <p><strong>{t("petcard.coat_color")}:</strong> {pet.coat_color || t("petcard.unknown")}</p>
+                        <p><strong>{t("petcard.price")}:</strong> {pet.price || t("petcard.free")}</p>
+                        <p><strong>{t("petcard.age")}:</strong> {formatAge(pet.age)}</p>
+                        <div className="button-row">
+                            <button
+                                onClick={() => {
+                                    if (pet.owner_id) {
+                                        navigate(`/profile/${pet.owner_id}`);
+                                    } else {
+                                        alert("Owner ID not loaded");
+                                    }
+                                }}
+                                className="btn-modal-small"
+                            >
+                                👤 {t("likes.owner")}
+                            </button>
+
+                            <ChatButton
+                                targetUserId={pet.owner_id}
+                                targetUsername={pet.owner_username}
+                                className="btn-modal-small"
+                            />
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </>
     );
 };
 

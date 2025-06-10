@@ -35,32 +35,43 @@ const MatchSwiper = () => {
         const match = matches[currentIndex];
         try {
             const csrf = await getCsrfToken();
+
+            // Лайк
             await axios.post(
                 `http://localhost:8000/matching/like/${pet_id}/${match.id}/`,
                 {},
                 { headers: { "X-CSRFToken": csrf }, withCredentials: true }
             );
 
+            // Запит на симпатію
             const res = await axios.post(
                 `http://localhost:8000/matching/sympathy/${pet_id}/`,
                 {},
                 { headers: { "X-CSRFToken": csrf }, withCredentials: true }
             );
 
-            const mutual = res.data.sympathys.find(sym =>
-                (sym.pet1 === Number(pet_id) && sym.pet2 === match.id) ||
-                (sym.pet2 === Number(pet_id) && sym.pet1 === match.id)
-            );
+            if (res.data.success) {
+                // Якщо симпатія створена або існує
+                const { pet1, pet2 } = res.data;
 
-            if (mutual) {
-                const petInfoRes = await axios.get(`http://localhost:8000/pets/get_pet/${match.id}/`, {
-                    withCredentials: true
-                });
-                setSympathyPetData(petInfoRes.data.report);
-                setShowSympathyModal(true);
+                // Перевіряємо, чи це наш поточний матч
+                const isMutual = (pet1 === Number(pet_id) && pet2 === match.id) || (pet2 === Number(pet_id) && pet1 === match.id);
+
+                if (isMutual) {
+                    const petInfoRes = await axios.get(`http://localhost:8000/pets/get_pet/${match.id}/`, {
+                        withCredentials: true
+                    });
+                    setSympathyPetData(petInfoRes.data.report);
+                    setShowSympathyModal(true);
+                } else {
+                    // Якщо симпатія є, але не з цим матчем, переходимо до наступного
+                    setCurrentIndex(prev => prev + 1);
+                }
             } else {
+                // Якщо симпатія не створена
                 setCurrentIndex(prev => prev + 1);
             }
+
         } catch (e) {
             console.error("Like error:", e);
             setCurrentIndex(prev => prev + 1);
