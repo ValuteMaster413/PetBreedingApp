@@ -123,7 +123,10 @@ def all_pets(request, user_id):
             'price': pet.price, 
             'coat_color': pet.coat_color, 
             'age': pet.age,
-            'photos': [photo.image.url for photo in pet.photo_set.all()]
+             'photos': [
+                {"id": photo.id, "url": photo.image.url}
+                for photo in pet.photo_set.all()
+            ]
         } for pet in pets]
         
         return JsonResponse({'reports': pets_list})
