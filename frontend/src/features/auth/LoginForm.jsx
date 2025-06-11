@@ -1,4 +1,6 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import AuthContext from "../../app/context/AuthContext";
@@ -9,10 +11,14 @@ import LanguageSwitcher from "../shared/components/LanguageSwitcher";
 const LoginForm = () => {
     const { t } = useTranslation();
     const { signIn } = useContext(AuthContext);
-    const [credentials, setCredentials] = useState({ username: "", password: "" });
-    const [error, setError] = useState(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const initialError = location.state?.error || null;
+    const [error, setError] = useState(initialError);
+    const [credentials, setCredentials] = useState({ username: "", password: "" });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+
 
     const handleChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -32,6 +38,11 @@ const LoginForm = () => {
             setIsSubmitting(false);
         }
     };
+    useEffect(() => {
+        if (initialError) {
+            window.history.replaceState({}, document.title);  // убираем state после первого рендера
+        }
+    }, []);
 
     return (
         <div className="login-form">

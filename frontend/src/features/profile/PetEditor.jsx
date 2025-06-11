@@ -7,7 +7,14 @@ import "./PetEditor.css";
 const PetEditor = ({ pet, onClose, onUpdate }) => {
     const { t } = useTranslation();
 
-    const [editedPet, setEditedPet] = useState({ ...pet });
+    const [editedPet, setEditedPet] = useState({
+        ...pet,
+        photos: (pet.photos || []).map((p, i) =>
+            typeof p === "string"
+                ? { id: `url-${i}`, url: p }
+                : p
+        )
+    });
     const [newPhotos, setNewPhotos] = useState([]);
     const [formErrors, setFormErrors] = useState({});
     const [isSaving, setIsSaving] = useState(false);
@@ -17,9 +24,7 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
 
     const togglePhotoSelection = (id) => {
         setSelectedPhotoIds((prev) =>
-            prev.includes(id)
-                ? prev.filter((pid) => pid !== id)
-                : [...prev, id]
+            prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
         );
     };
 
@@ -39,7 +44,11 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
                 }
             }
 
-            selectedPhotoIds.forEach((id) => formData.append("delete_photo", id));
+            selectedPhotoIds.forEach((id) => {
+                if (!String(id).startsWith("url-")) {
+                    formData.append("delete_photo", id);
+                }
+            });
 
             const res = await axios.post(
                 `http://localhost:8000/pets/edit_pet/${pet.id}/`,

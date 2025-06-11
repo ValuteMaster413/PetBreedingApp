@@ -43,8 +43,15 @@ const Profile = () => {
 
     const fetchPets = async () => {
         try {
-            const response = await axios.get("http://localhost:8000/pets/all_my_pets/", {withCredentials: true});
-            setPets(response.data.reports);
+            const response = await axios.get("http://localhost:8000/pets/all_my_pets/", {
+                withCredentials: true
+            });
+
+            const normalizedPets = response.data.reports.map(pet => ({
+                ...pet,
+                photos: pet.photos || []
+            }));
+            setPets(normalizedPets);
         } catch (e) {
             console.error(t("errors.pets.load"), e);
         }
@@ -70,7 +77,8 @@ const Profile = () => {
                         password: "",
                     });
                 } else {
-                    setError(t("errors.profile.not_found"));
+                    setProfile(null);
+                    setError(null);
                 }
             } catch (err) {
                 setError(t("errors.profile.load"));
@@ -125,8 +133,13 @@ const Profile = () => {
 
     if (loading) return <p className="text-center text-gray-500">{t("loading")}</p>;
     if (error) return <p className="text-center text-red-500">{error}</p>;
-    if (!profile) return <p className="text-center text-gray-500">{t("profile.not_found")}</p>;
-
+    if (!profile && !loading && !error) {
+        return (
+            <div className="text-center text-gray-500">
+                {t("profile.not_found")}
+            </div>
+        );
+    }
     return (
         <>
             <Header/>

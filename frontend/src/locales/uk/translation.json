@@ -161,7 +161,7 @@
   "pet.select_gender": "Оберіть стать",
   "common.save": "Зберегти",
   "common.cancel": "Скасувати",
-  "pet.delete_selected": "🗑 Delete {count} photos",
+  "pet.delete_selected": "Видалити {{count}} фото",
   "pet.edit": "Редагування тварини",
   "pet.male": "Хлопчик",
   "pet.female": "Дівчинка",

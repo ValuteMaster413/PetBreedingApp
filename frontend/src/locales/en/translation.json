@@ -160,7 +160,7 @@
   "pet.select_gender": "Select gender",
   "common.save": "Save",
   "common.cancel": "Cancel",
-  "pet.delete_selected": "Видалити {count} фото",
+  "pet.delete_selected": "Delete {{count}} photos",
   "pet.edit": "Edit Pet",
   "pet.male": "Male",
   "pet.female": "Female",
