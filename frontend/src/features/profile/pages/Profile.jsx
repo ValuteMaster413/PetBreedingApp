@@ -40,6 +40,8 @@ const Profile = () => {
     const [deletePhotoIds, setDeletePhotoIds] = useState([]);
     const [newPetPhotos, setNewPetPhotos] = useState([]);
     const navigate = useNavigate();
+    const [reviews, setReviews] = useState([]);
+    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
     const fetchPets = async () => {
         try {
@@ -56,12 +58,27 @@ const Profile = () => {
             console.error(t("errors.pets.load"), e);
         }
     };
+    const fetchReviews = async () => {
+        try {
+            const res = await axios.get(`http://localhost:8000/users/all_review/${profile.user_id}/`, {
+                withCredentials: true
+            });
+            setReviews(res.data.reports);
+        } catch (e) {
+            console.error("Ошибка загрузки отзывов", e);
+        }
+    };
 
     useEffect(() => {
         if (!loading && profile) {
             fetchPets();
         }
     }, [loading, profile]);
+    useEffect(() => {
+        if (profile?.user_id) {
+            fetchReviews();
+        }
+    }, [profile]);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -140,6 +157,11 @@ const Profile = () => {
             </div>
         );
     }
+
+
+
+
+
     return (
         <>
             <Header/>
@@ -158,6 +180,9 @@ const Profile = () => {
                     </button>
                     <button className="profile-button btn-red" onClick={handleLogout}>
                         {t("buttons.logout")}
+                    </button>
+                    <button className="profile-button btn-gray" onClick={() => setIsReviewModalOpen(true)}>
+                        {t("buttons.show_reviews") || "Показать отзывы"}
                     </button>
                 </div>
 
@@ -206,6 +231,8 @@ const Profile = () => {
                         </div>
                     )}
                 </div>
+
+
 
                 {isCreating && (
                     <Modal onClose={() => {
@@ -287,6 +314,29 @@ const Profile = () => {
                         />
                     </Modal>
                 )}
+
+                {isReviewModalOpen && (
+                    <Modal onClose={() => setIsReviewModalOpen(false)}>
+                        <div className="modal-content-box">
+                            <h3 className="text-xl font-semibold mb-4">{t("profile.reviews_title") || "Отзывы о вас"}</h3>
+                            {reviews.length === 0 ? (
+                                <p className="text-gray-500">{t("profile.no_reviews") || "Нет отзывов"}</p>
+                            ) : (
+                                <ul className="space-y-4 max-h-[400px] overflow-y-auto">
+                                    {reviews.map((review) => (
+                                        <li key={review.id} className="border p-4 rounded shadow">
+                                            <p><strong>{t("profile.rating") || "Оценка"}:</strong> {review.rating} / 5</p>
+                                            <p><strong>{t("profile.comment") || "Комментарий"}:</strong> {review.comment || t("profile.no_comment") || "Без комментария"}</p>
+                                            <p><strong>{t("profile.from") || "От"}:</strong> {review.reviewer_username}</p>
+                                            <p><small>{new Date(review.created_at).toLocaleString()}</small></p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    </Modal>
+                )}
+
             </div>
         </>
     );

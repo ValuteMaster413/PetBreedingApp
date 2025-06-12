@@ -176,5 +176,22 @@
   "reviews.self_review_error": "You cannot leave a review for yourself.",
   "reviews.already_left": "You have already left a review.",
   "reviews.empty": "No reviews yet",
-  "chatlist.with_user": "With {{username}}"
+  "chatlist.with_user": "With {{username}}",
+  "petcard.unknown": "Barn cat",
+  "chatlist.error_loading_user": "Error loading user data",
+  "chatlist.delete": "Delete chat",
+  "chatlist.confirm_delete": "Are you sure you want to delete this chat?",
+  "chatlist.delete_failed": "Failed to delete chat",
+  "yes": "Yes",
+  "no": "No",
+  "profile.reviews_title": "Reviews about you",
+  "profile.no_reviews": "No reviews",
+  "profile.rating": "Rating",
+  "profile.comment": "Comment",
+  "profile.no_comment": "No comment",
+  "profile.from": "From",
+  "buttons.show_reviews": "Show reviews",
+  "pet.breed_hint": "If you specify the breed, only that breed will appear in search results. If you don’t — any breed will match.",
+  "match.limit_reached": "You have reached the view limit",
+  "match.premium_offer": "Buy premium to view more profiles."
 }

@@ -38,3 +38,21 @@
     text-align: center;
     margin-top: 1rem;
 }
+.chat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+.chat-delete-button {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #c0392b;
+    margin-left: 0.5rem;
+}
+
+.chat-delete-button:hover {
+    color: #e74c3c;
+}

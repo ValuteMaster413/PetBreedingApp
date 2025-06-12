@@ -49,6 +49,13 @@ const PetForm = ({initialPet, initialPhotos, formErrors, onSave, onCancel, title
                     {formErrors?.[name] && (
                         <p className="form-error">{formErrors[name]}</p>
                     )}
+
+                    {/* 👉 Ремарка только для breed */}
+                    {name === "breed" && (
+                        <small className="form-hint">
+                            {t("pet.breed_hint") || "Если указать породу, в поиске будут показаны только такие породы. Если не указывать — подойдут любые."}
+                        </small>
+                    )}
                 </div>
             ))}
 

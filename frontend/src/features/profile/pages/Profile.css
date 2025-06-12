@@ -69,3 +69,25 @@
 .btn-add-pet:hover {
     background-color: #059669;
 }
+.btn-gray {
+    background-color: #e5e7eb; /* light gray */
+    color: #1f2937; /* dark text */
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-gray:hover {
+    background-color: #d1d5db;
+}
+.modal-content-box {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}

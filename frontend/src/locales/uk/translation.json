@@ -178,6 +178,25 @@
   "reviews.self_review_error": "Ви не можете залишити відгук самі собі.",
   "reviews.already_left": "Ви вже залишили відгук.",
   "reviews.empty": "Ще немає відгуків",
-  "chatlist.with_user": "З {{username}}"
+  "chatlist.with_user": "З {{username}}",
+  "petcard.unknown": "Дворова кішка",
+  "chatlist.error_loading_user": "Помилка завантаження даних користувача",
+  "chatlist.delete": "Видалити чат",
+  "chatlist.confirm_delete": "Ви точно хочете видалити цей чат?",
+  "chatlist.delete_failed": "Не вдалося видалити чат",
+  "yes": "Так",
+  "no": "Ні",
+  "profile.reviews_title": "Відгуки про вас",
+  "profile.no_reviews": "Немає відгуків",
+  "profile.rating": "Оцінка",
+  "profile.comment": "Коментар",
+  "profile.no_comment": "Без коментаря",
+  "profile.from": "Від",
+  "buttons.show_reviews": "Показати відгуки",
+  "pet.breed_hint": "Якщо вказати породу, у пошуку будуть показані лише такі породи. Якщо не вказувати — підійдуть будь-які.",
+  "match.limit_reached": "Ви досягли ліміту переглядів",
+  "match.premium_offer": "Придбайте преміум, щоб переглядати більше анкет."
+
+
 
 }

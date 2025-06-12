@@ -11,16 +11,8 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
     const [likesCount, setLikesCount] = useState(0);
 
     const formatAge = (months) => {
-        if (months < 1) return t("petcard.age.less_than_month");
-        if (months === 6) return t("petcard.age.half_year");
-        if (months < 12) return t("petcard.age.months", { count: months });
-        if (months % 12 === 0) {
-            const years = months / 12;
-            return t("petcard.age.years", { count: years });
-        }
         const years = Math.floor(months / 12);
-        const remainingMonths = months % 12;
-        return t("petcard.age.years_months", { years, months: remainingMonths });
+        return t("petcard.age.years", { count: years });
     };
 
     useEffect(() => {
