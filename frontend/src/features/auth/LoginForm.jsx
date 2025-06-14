@@ -1,27 +1,26 @@
-import { useState, useContext, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import {useState, useContext, useEffect} from "react";
+import {useLocation} from "react-router-dom";
 
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import AuthContext from "../../app/context/AuthContext";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 import "./LoginForm.css";
 import LanguageSwitcher from "../shared/components/LanguageSwitcher";
 
 const LoginForm = () => {
-    const { t } = useTranslation();
-    const { signIn } = useContext(AuthContext);
+    const {t} = useTranslation();
+    const {signIn} = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
     const initialError = location.state?.error || null;
     const [error, setError] = useState(initialError);
-    const [credentials, setCredentials] = useState({ username: "", password: "" });
+    const [credentials, setCredentials] = useState({username: "", password: ""});
     const [isSubmitting, setIsSubmitting] = useState(false);
 
 
-
     const handleChange = (e) => {
-        setCredentials({ ...credentials, [e.target.name]: e.target.value });
+        setCredentials({...credentials, [e.target.name]: e.target.value});
     };
 
     const handleSubmit = async (e) => {
@@ -32,7 +31,12 @@ const LoginForm = () => {
             await signIn(credentials.username, credentials.password);
             navigate("/profile");
         } catch (error) {
-            setError(t("errors.login_failed") || "Помилка входу");
+            if (error.response?.data?.error === "Invalid credentials") {
+                setError(t("errors.invalid_credentials") || "Неправильний логін або пароль");
+            } else {
+
+                setError(t("errors.invalid_credentials") || "Неправильний логін або пароль");
+            }
             console.error("Login error:", error);
         } finally {
             setIsSubmitting(false);
@@ -40,15 +44,16 @@ const LoginForm = () => {
     };
     useEffect(() => {
         if (initialError) {
-            window.history.replaceState({}, document.title);  // убираем state после первого рендера
+            window.history.replaceState({}, document.title);
         }
     }, []);
 
+
     return (
         <div className="login-form">
-            <LanguageSwitcher />
+            <LanguageSwitcher/>
             <h2>{t("login.title")}</h2>
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p className="error">{error}</p>}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"

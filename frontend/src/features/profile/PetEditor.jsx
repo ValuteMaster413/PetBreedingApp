@@ -4,8 +4,17 @@ import { getCsrfToken } from "../../api/authService";
 import axios from "axios";
 import "./PetEditor.css";
 
+
 const PetEditor = ({ pet, onClose, onUpdate }) => {
     const { t } = useTranslation();
+    const [newPhotos, setNewPhotos] = useState([]);
+    const [formErrors, setFormErrors] = useState({});
+    const [isSaving, setIsSaving] = useState(false);
+    const [selectedPhotoIds, setSelectedPhotoIds] = useState([]);
+    const [viewerOpen, setViewerOpen] = useState(false);
+    const [viewerIndex, setViewerIndex] = useState(0);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [submitError, setSubmitError] = useState(null);
 
     const [editedPet, setEditedPet] = useState({
         ...pet,
@@ -15,12 +24,7 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
                 : p
         )
     });
-    const [newPhotos, setNewPhotos] = useState([]);
-    const [formErrors, setFormErrors] = useState({});
-    const [isSaving, setIsSaving] = useState(false);
-    const [selectedPhotoIds, setSelectedPhotoIds] = useState([]);
-    const [viewerOpen, setViewerOpen] = useState(false);
-    const [viewerIndex, setViewerIndex] = useState(0);
+
 
     const togglePhotoSelection = (id) => {
         setSelectedPhotoIds((prev) =>
@@ -90,7 +94,11 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
     const handleFileChange = (e) => {
         setNewPhotos([...e.target.files]);
     };
-
+    const preventNumbers = (e) => {
+        if (/\d/.test(e.key)) {
+            e.preventDefault();
+        }
+    };
     const handleSubmit = async () => {
         const errors = {};
         if (!editedPet.species?.trim()) errors.species = t("form.required");
@@ -135,17 +143,23 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
                 onClose();
             }
         } catch (err) {
-            console.error(t("errors.save"), err);
+            console.error("Error saving pet:", err);
+            setSubmitError(t("errors.save") || "Помилка при збереженні даних.");
         } finally {
             setIsSaving(false);
         }
+    };
+    const getPhotoDeletionPhrase = (count) => {
+        if (count === 1) return t("modal.delete_photo_singular");
+        if (count >= 2 && count <= 4) return t("modal.delete_photo_few", { count });
+        return t("modal.delete_photo_many", { count });
     };
 
     return (
         <div className="pet-editor-wrapper">
             <div className="pet-editor-container">
                 <h2 className="pet-editor-title">{t("pet.edit")}</h2>
-
+                {submitError && <p className="form-error">{submitError}</p>}
                 {["species", "breed", "coat_color", "age", "price"].map((field) => (
                     <div key={field} className="form-group">
                         <input
@@ -155,9 +169,25 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
                             value={editedPet[field] || ""}
                             onChange={handleChange}
                             className="form-input"
+                            inputMode="text"
+                            onKeyDown={["species", "breed", "coat_color"].includes(field) ? preventNumbers : undefined}
                         />
                         {formErrors[field] && (
                             <p className="form-error">{formErrors[field]}</p>
+                        )}
+
+
+                        {field === "breed" && (
+                            <small className="form-hint">
+                                {t("pet.breed_hint") || "Якщо вказати породу, у пошуку будуть показані лише такі породи. Якщо не вказувати — підійдуть будь-які."}
+                            </small>
+                        )}
+
+
+                        {field === "age" && (
+                            <small className="form-hint">
+                                {t("pet.age_hint") || "Вік вказується в місяцях"}
+                            </small>
                         )}
                     </div>
                 ))}
@@ -208,7 +238,7 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
 
                 {selectedPhotoIds.length > 0 && (
                     <button
-                        onClick={handleDeleteSelected}
+                        onClick={() => setShowDeleteConfirm(true)}
                         className="btn-delete-selected"
                     >
                         🗑 {t("pet.delete_selected", { count: selectedPhotoIds.length })}
@@ -250,7 +280,26 @@ const PetEditor = ({ pet, onClose, onUpdate }) => {
                 )}
 
             </div>
+            {showDeleteConfirm && (
+                <div className="modal-backdrop" onClick={() => setShowDeleteConfirm(false)}>
+                    <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+                        <h3>{getPhotoDeletionPhrase(selectedPhotoIds.length)}</h3>
+                        <div className="modal-actions">
+                            <button onClick={() => {
+                                handleDeleteSelected();
+                                setShowDeleteConfirm(false);
+                            }} className="btn-confirm">
+                                {t("yes") || "Так"}
+                            </button>
+                            <button onClick={() => setShowDeleteConfirm(false)} className="btn-cancel">
+                                {t("no") || "Ні"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
+
     );
 };
 

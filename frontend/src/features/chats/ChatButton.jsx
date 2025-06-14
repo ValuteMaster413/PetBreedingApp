@@ -29,7 +29,7 @@ const ChatButton = ({ targetUserId, targetUsername }) => {
 
     return (
         <button className="btn-modal-small" onClick={handleClick}>
-            ✉ {t("chat_button.send_message")} {targetUsername ? `(${targetUsername})` : ""}
+            ✉ {t("chat_button.send_message")}
         </button>
     );
 };

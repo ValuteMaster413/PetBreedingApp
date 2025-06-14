@@ -9,10 +9,22 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
     const [openPreview, setOpenPreview] = useState(false);
     const [showLikesModal, setShowLikesModal] = useState(false);
     const [likesCount, setLikesCount] = useState(0);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     const formatAge = (months) => {
+        console.log(months);
+        if (months < 12) {
+            return t("petcard.age.months", { count: months });
+        }
+
         const years = Math.floor(months / 12);
-        return t("petcard.age.years", { count: years });
+        const remainingMonths = months % 12;
+
+        if (remainingMonths === 0) {
+            return t("petcard.age.years", { count: years });
+        }
+
+        return t("petcard.age.years_months", { years, months: remainingMonths });
     };
 
     useEffect(() => {
@@ -63,7 +75,9 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
             )}
 
             <div className="pet-buttons">
-                <button className="btn-delete" onClick={onDelete}>🗑 {t("petcard.delete")}</button>
+                <button className="btn-delete" onClick={() => setShowDeleteConfirm(true)}>
+                    🗑 {t("petcard.delete")}
+                </button>
                 <button className="btn-edit" onClick={onEdit}>✏️ {t("petcard.edit")}</button>
                 <button className="btn-match" onClick={onMatch}>🔍 {t("petcard.match")}</button>
 
@@ -84,6 +98,32 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
                     />
                 )}
             </div>
+
+            {showDeleteConfirm && (
+                <div className="modal-backdrop" onClick={() => setShowDeleteConfirm(false)}>
+                    <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+                        <h3>{t("chatlist.confirm_delete_pet") || "Ви точно хочете видалити тварину?"}</h3>
+                        <div className="modal-actions">
+                            <button
+                                className="btn-confirm"
+                                onClick={() => {
+                                    onDelete();
+                                    setShowDeleteConfirm(false);
+                                }}
+                            >
+                                {t("yes") || "Так"}
+                            </button>
+                            <button
+                                className="btn-cancel"
+                                onClick={() => setShowDeleteConfirm(false)}
+                            >
+                                {t("no") || "Ні"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };

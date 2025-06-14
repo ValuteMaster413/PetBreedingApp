@@ -159,9 +159,6 @@ const Profile = () => {
     }
 
 
-
-
-
     return (
         <>
             <Header/>
@@ -208,7 +205,8 @@ const Profile = () => {
                     {pets.length === 0 ? (
                         <p className="text-gray-500">{t("profile.no_pets")}</p>
                     ) : (
-                        <div className="space-y-4">
+                        <div className="pet-scroll-area space-y-4 overflow-y-auto pr-2">
+
                             {pets.map((pet, index) => (
                                 <PetCard
                                     key={index}
@@ -231,7 +229,6 @@ const Profile = () => {
                         </div>
                     )}
                 </div>
-
 
 
                 {isCreating && (
@@ -325,9 +322,13 @@ const Profile = () => {
                                 <ul className="space-y-4 max-h-[400px] overflow-y-auto">
                                     {reviews.map((review) => (
                                         <li key={review.id} className="border p-4 rounded shadow">
-                                            <p><strong>{t("profile.rating") || "Оценка"}:</strong> {review.rating} / 5</p>
-                                            <p><strong>{t("profile.comment") || "Комментарий"}:</strong> {review.comment || t("profile.no_comment") || "Без комментария"}</p>
-                                            <p><strong>{t("profile.from") || "От"}:</strong> {review.reviewer_username}</p>
+                                            <p><strong>{t("profile.rating") || "Оценка"}:</strong> {review.rating} / 5
+                                            </p>
+                                            <p>
+                                                <strong>{t("profile.comment") || "Комментарий"}:</strong> {review.comment || t("profile.no_comment") || "Без комментария"}
+                                            </p>
+                                            <p><strong>{t("profile.from") || "От"}:</strong> {review.reviewer_username}
+                                            </p>
                                             <p><small>{new Date(review.created_at).toLocaleString()}</small></p>
                                         </li>
                                     ))}

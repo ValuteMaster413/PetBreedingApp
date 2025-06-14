@@ -91,3 +91,10 @@
     overflow-y: auto;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
+.pet-scroll-area {
+    max-height: 500px;
+    width: 110%;
+    overflow-y: auto;
+    overflow-x: hidden; /* Убираем горизонтальный скролл */
+    padding-right: 0.5rem;
+}

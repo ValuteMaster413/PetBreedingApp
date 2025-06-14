@@ -17,8 +17,20 @@ const PetForm = ({initialPet, initialPhotos, formErrors, onSave, onCancel, title
     };
 
     const handleSubmit = () => {
-        onSave(petData, photos);
+        const snakeCaseData = Object.fromEntries(
+            Object.entries(petData).map(([key, value]) => [
+                key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`),
+                value
+            ])
+        );
+        onSave(snakeCaseData, photos);
     };
+    const preventNumbers = (e) => {
+        if (/\d/.test(e.key)) {
+            e.preventDefault();
+        }
+    };
+
 
     const fields = [
         {label: t("pet.species"), name: "species", required: true},
@@ -45,15 +57,23 @@ const PetForm = ({initialPet, initialPhotos, formErrors, onSave, onCancel, title
                         onChange={handleChange}
                         placeholder={label}
                         className="form-input"
+                        inputMode="text"
+                        onKeyDown={(name === "species" || name === "breed" || name === "coat_color") ? preventNumbers : undefined}
                     />
                     {formErrors?.[name] && (
                         <p className="form-error">{formErrors[name]}</p>
                     )}
 
-                    {/* 👉 Ремарка только для breed */}
+
                     {name === "breed" && (
                         <small className="form-hint">
-                            {t("pet.breed_hint") || "Если указать породу, в поиске будут показаны только такие породы. Если не указывать — подойдут любые."}
+                            {t("pet.breed_hint") || "Якщо вказати породу, у пошуку будуть показані лише такі породи. Якщо не вказувати — підійдуть будь-які"}
+                        </small>
+                    )}
+
+                    {name === "age" && (
+                        <small className="form-hint">
+                            {t("pet.age_hint") || "Вік вказується в місяцях"}
                         </small>
                     )}
                 </div>

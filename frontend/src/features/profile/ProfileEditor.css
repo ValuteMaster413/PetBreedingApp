@@ -75,3 +75,12 @@
     justify-content: center;
     align-items: center;
 }
+.editor-error {
+    color: #e11d48;
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+    margin-left: 0.25rem;
+}
+.editor-group {
+    margin-bottom: 1.25rem;
+}
