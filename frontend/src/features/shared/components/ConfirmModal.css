@@ -1,0 +1,43 @@
+.confirm-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.confirm-modal {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 300px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.confirm-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.btn-yes {
+    background: #27ae60;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+}
+
+.btn-no {
+    background: #c0392b;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+}

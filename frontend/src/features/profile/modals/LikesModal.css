@@ -1,0 +1,63 @@
+.scrollable {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.like-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.like-photo-block {
+    flex: 0 0 80px;
+    margin-right: 12px;
+}
+
+.like-thumb {
+    width: 200px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.like-info {
+    flex-grow: 1;
+}
+
+.like-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.btn-modal-small {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-modal-small:hover {
+    background: #059669;
+}
+
+.btn-modal-ignore {
+    background: #e53e3e;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-modal-ignore:hover {
+    background: #c53030;
+}

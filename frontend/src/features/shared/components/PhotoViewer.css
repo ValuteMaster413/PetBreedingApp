@@ -1,0 +1,72 @@
+.viewer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.viewer-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.viewer-image {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0.5rem;
+    object-fit: contain;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.viewer-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 2rem;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.viewer-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+}
+
+.viewer-nav.prev {
+    left: -50px;
+}
+
+.viewer-nav.next {
+    right: -50px;
+}
+
+.photo-count-overlay {
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+    background-color: rgba(0, 0, 0, 0.65);
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 9999px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    pointer-events: none;
+}
+

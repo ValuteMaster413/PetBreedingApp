@@ -1,0 +1,226 @@
+.pet-editor-wrapper {
+    padding: 2rem 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.pet-editor-container {
+    background-color: white;
+    padding: 3rem;
+    border-radius: 0.5rem;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.pet-editor-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-input, .form-file {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.375rem;
+}
+
+.form-error {
+    color: #dc2626;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.pet-photo-preview-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.pet-photo {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 0.375rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.pet-editor-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+.pet-editor-btn-save {
+    background-color: #10b981;
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.pet-editor-btn-save:disabled {
+    background-color: #6ee7b7;
+    cursor: not-allowed;
+}
+
+.pet-editor-btn-cancel {
+    background-color: #e5e7eb;
+    color: #374151;
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.pet-editor-btn-cancel:hover {
+    background-color: #d1d5db;
+}
+.pet-photo-preview-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 1rem;
+}
+
+.pet-photo-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.pet-photo-wrapper.selected {
+    outline: 2px solid #0ea5e9;
+    opacity: 0.75;
+}
+
+.pet-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.photo-check-overlay {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: #0ea5e9;
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 9999px;
+}
+
+.btn-delete-selected {
+    margin-top: 1rem;
+    background: #ef4444;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.photo-viewer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.photo-viewer-img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 1rem;
+}
+
+.viewer-close,
+.viewer-prev,
+.viewer-next {
+    position: absolute;
+    font-size: 2rem;
+    color: white;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.viewer-close {
+    top: 1rem;
+    right: 1rem;
+}
+
+.viewer-prev {
+    left: 2rem;
+}
+
+.viewer-next {
+    right: 2rem;
+}
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-box {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn-confirm {
+    background-color: #dc2626;
+    color: white;
+    padding: 0.5rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background-color: #e5e7eb;
+    color: #111827;
+    padding: 0.5rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}

@@ -1,0 +1,90 @@
+.photo-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.photo-wrapper {
+    position: relative;
+    width: 40%;
+}
+
+.photo {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
+.photo.selected {
+    opacity: 0.5;
+    outline: 2px solid red;
+}
+
+.photo-checkmark {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    background-color: red;
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    font-weight: bold;
+    border-radius: 9999px;
+}
+
+/* Fullscreen viewer */
+.viewer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.viewer-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.viewer-image {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0.5rem;
+}
+
+.viewer-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 2rem;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.viewer-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+}
+
+.viewer-nav.prev {
+    left: -50px;
+}
+
+.viewer-nav.next {
+    right: -50px;
+}
