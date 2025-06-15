@@ -96,12 +96,26 @@ const PetProfile = () => {
                     )}
 
                     <div className="pet-details">
-                        <p><strong>{t("petcard.species")}:</strong> {pet.species}</p>
-                        <p><strong>{t("petcard.gender")}:</strong> {t(`petcard.gender.${pet.gender}`)}</p>
-                        <p><strong>{t("petcard.breed")}:</strong> {pet.breed || t("petcard.unknown")}</p>
-                        <p><strong>{t("petcard.coat_color")}:</strong> {pet.coat_color || t("petcard.unknown")}</p>
-                        <p><strong>{t("petcard.price")}:</strong> {pet.price || t("petcard.free")}</p>
-                        <p><strong>{t("petcard.age")}:</strong> {formatAge(pet.age)}</p>
+                        <p>
+                            <strong>{t("petcard.species")}:</strong> {t(`species.${pet.species.toLowerCase()}`, { defaultValue: pet.species })}
+                        </p>
+                        <p>
+                            <strong>{t("petcard.gender")}:</strong> {t(`petcard.gender.${pet.gender.toLowerCase()}`, { defaultValue: pet.gender })}
+                        </p>
+                        <p>
+                            <strong>{t("petcard.breed")}:</strong> {
+                            pet.breed
+                                ? t(`breed.${pet.species.toLowerCase()}.${pet.breed.toLowerCase()}`, { defaultValue: pet.breed })
+                                : t("petcard.unknown")
+                        }
+                        </p>
+                        <p>
+                            <strong>{t("petcard.coat_color")}:</strong> {
+                            pet.coat_color
+                                ? t(`coat.${pet.species.toLowerCase()}.${pet.coat_color.toLowerCase()}`, { defaultValue: pet.coat_color })
+                                : t("petcard.unknown")
+                        }
+                        </p>
                         <div className="button-row">
                             <button
                                 onClick={() => {

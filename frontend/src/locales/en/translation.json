@@ -118,7 +118,7 @@
   "profileeditor.save": "Save",
   "profileeditor.cancel": "Cancel",
   "otherprofile.reviews": "★ View Reviews",
-  "otherprofile.pets.title": "{username} } 's Pets",
+  "otherprofile.pets.title": "{username}  's Pets",
   "otherprofile.pets.none": "No pets found",
   "errors.required": "Required field",
   "errors.price_format": "Price must be a number",
@@ -212,6 +212,125 @@
   "form.age_number": "Age must be a whole number",
   "chatlist.confirm_delete_pet": "Are you sure you want to delete the animal?",
   "errors.phone_too_short": "Phone number must be at least 10 digits.",
-  "errors.password_too_short": "Password must be at least 8 characters."
+  "errors.password_too_short": "Password must be at least 8 characters.",
+  "petform.error_invalid_breed": "Select a breed that matches the animal species",
+  "petform.error_invalid_coat_color": "Select a valid coat color for this species",
+  "errors.filters.invalid_age_range": "Minimum age cannot be greater than maximum age.",
+  "errors.filters.negative_price": "Price cannot be negative.",
+
+  "match.filters": "Filters",
+  "match.min_age": "Min age",
+  "match.max_age": "Max age",
+  "match.max_price": "Max price",
+  "match.apply_filters": "Apply filters",
+
+  "pet": {
+    "select_species": "Select species",
+    "select_breed": "Select breed",
+    "select_coat_color": "Select coat color"
+  },
+  "species": {
+    "dog": "Dog",
+    "cat": "Cat",
+    "rabbit": "Rabbit",
+    "parrot": "Parrot"
+  },
+  "breed": {
+    "dog": {
+      "labrador": "Labrador",
+      "beagle": "Beagle",
+      "poodle": "Poodle",
+      "bulldog": "Bulldog",
+      "terrier": "Terrier",
+      "shiba": "Shiba Inu",
+      "husky": "Husky",
+      "dachshund": "Dachshund"
+    },
+    "cat": {
+      "persian": "Persian",
+      "siamese": "Siamese",
+      "mainecoon": "Maine Coon",
+      "sphynx": "Sphynx",
+      "british": "British",
+      "bengal": "Bengal",
+      "scottish": "Scottish",
+      "oriental": "Oriental"
+    },
+    "rabbit": {
+      "lop": "Lop",
+      "dwarf": "Dwarf",
+      "rex": "Rex",
+      "angora": "Angora",
+      "flemish": "Flemish Giant",
+      "lionhead": "Lionhead",
+      "silver": "Silver",
+      "californian": "Californian"
+    },
+    "parrot": {
+      "budgie": "Budgie",
+      "cockatiel": "Cockatiel",
+      "canary": "Canary",
+      "lovebird": "Lovebird",
+      "finch": "Finch",
+      "parrot": "Parrot",
+      "macaw": "Macaw",
+      "cockatoo": "Cockatoo"
+    }
+  },
+  "coat": {
+    "dog": {
+      "black": "Black",
+      "white": "White",
+      "brown": "Brown",
+      "golden": "Golden",
+      "gray": "Gray",
+      "spotted": "Spotted",
+      "brindle": "Brindle",
+      "tan": "Tan"
+    },
+    "cat": {
+      "grey": "Grey",
+      "orange": "Orange",
+      "white": "White",
+      "black": "Black",
+      "calico": "Calico",
+      "tabby": "Tabby",
+      "point": "Point",
+      "blue": "Blue"
+    },
+    "rabbit": {
+      "white": "White",
+      "grey": "Grey",
+      "black": "Black",
+      "brown": "Brown",
+      "blue": "Blue",
+      "fawn": "Fawn",
+      "chinchilla": "Chinchilla",
+      "broken": "Broken"
+    },
+    "parrot": {
+      "green": "Green",
+      "yellow": "Yellow",
+      "blue": "Blue",
+      "white": "White",
+      "grey": "Grey",
+      "red": "Red",
+      "multicolor": "Multicolor",
+      "orange": "Orange"
+    }
+  },
+  "match": {
+    "age": "Age",
+    "years": "yr",
+    "months": "mo",
+    "age_hint": "Age is specified in months"
+  },
+  "petcard.years": "{count} year",
+  "petcard.years_plural": "{count} years",
+  "petcard.years_plural_2": "{count} years",
+  "petcard.months": "{count} month",
+  "petcard.months_plural": "{count} months",
+  "petcard.months_plural_2": "{count} months"
+
 
 } 

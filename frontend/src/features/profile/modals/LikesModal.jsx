@@ -123,9 +123,20 @@ const LikeEntry = ({ viewerPetId, petId, onLikeBack, onIgnore }) => {
                     )}
                 </div>
                 <div className="like-info">
-                    <p><strong>{pet.species}</strong> — {t(`petcard.gender.${pet.gender}`)}</p>
-                    <p>{t("likes.breed")}: {pet.breed || t("match.unknown")}</p>
-                    <p>{t("likes.age")}: {t("petcard.age.months", { count: Number(pet.age) })}</p>
+                    <p>
+                        <strong>{t(`species.${pet.species.toLowerCase()}`)}</strong> — {t(`petcard.gender.${pet.gender.toLowerCase()}`)}
+                    </p>
+                    <p>{t("likes.breed")}: {
+                        pet.breed
+                            ? t(`breed.${pet.species.toLowerCase()}.${pet.breed.toLowerCase()}`, { defaultValue: pet.breed })
+                            : t("match.unknown")
+                    }</p>
+                    {pet.coat_color && (
+                        <p>{t("petcard.coat_color")}: {
+                            t(`coat.${pet.species.toLowerCase()}.${pet.coat_color.toLowerCase()}`, { defaultValue: pet.coat_color })
+                        }</p>
+                    )}
+
 
                     <div className="like-buttons">
                         <button onClick={handleDislike} className="btn-modal-ignore">👎 {t("likes.ignore")}</button>

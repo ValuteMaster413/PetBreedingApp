@@ -10,9 +10,11 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
     const [showLikesModal, setShowLikesModal] = useState(false);
     const [likesCount, setLikesCount] = useState(0);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const capitalize = (str) => str?.charAt(0).toUpperCase() + str?.slice(1).toLowerCase();
 
     const formatAge = (months) => {
-        console.log(months);
+
+
         if (months < 12) {
             return t("petcard.age.months", { count: months });
         }
@@ -42,10 +44,15 @@ const PetCard = ({ pet, onEdit, onDelete, onMatch }) => {
 
     return (
         <div className="pet-card">
-            <p><strong>{t("petcard.species")}:</strong> {pet.species}</p>
-            <p><strong>{t("petcard.gender")}:</strong> {t(`petcard.gender.${pet.gender}`)}</p>
-            <p><strong>{t("petcard.breed")}:</strong> {pet.breed || t("petcard.unknown")}</p>
-            <p><strong>{t("petcard.coat_color")}:</strong> {pet.coat_color || t("petcard.unknown")}</p>
+            <p><strong>{t("petcard.species")}:</strong> {t(`species.${pet.species.toLowerCase()}`)}</p>
+            <p><strong>{t("petcard.gender")}:</strong> {t(`petcard.gender.${pet.gender?.toLowerCase()}`)}</p>
+            <p><strong>{t("petcard.breed")}:</strong> {
+                pet.breed ? t(`breed.${pet.species.toLowerCase()}.${pet.breed.toLowerCase()}`) : t("petcard.unknown")
+            }</p>
+
+            <p><strong>{t("petcard.coat_color")}:</strong> {
+                pet.coat_color ? t(`coat.${pet.species.toLowerCase()}.${pet.coat_color.toLowerCase()}`) : t("petcard.unknown")
+            }</p>
             <p><strong>{t("petcard.price")}:</strong> {pet.price || t("petcard.free")}</p>
             <p><strong>{t("petcard.age")}:</strong> {formatAge(pet.age)}</p>
 

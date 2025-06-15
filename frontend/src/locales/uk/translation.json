@@ -214,5 +214,130 @@
   "form.age_number": "Вік повинен бути цілим числом",
   "chatlist.confirm_delete_pet": "Ви точно хочете видалити тварину?",
   "errors.phone_too_short": "Номер телефону має містити щонайменше 10 символів.",
-  "errors.password_too_short": "Пароль має містити щонайменше 8 символів."
+  "errors.password_too_short": "Пароль має містити щонайменше 8 символів.",
+  "petform.error_invalid_breed": "Оберіть породу, що відповідає виду тварини",
+  "petform.error_invalid_coat_color": "Оберіть допустиме забарвлення для цього виду",
+  "match.filters": "Фільтри",
+  "match.min_age": "Мінімальний вік",
+  "match.max_age": "Максимальний вік",
+  "match.max_price": "Максимальна ціна",
+  "match.apply_filters": "Застосувати фільтри",
+  "errors.filters.invalid_age_range": "Мінімальний вік не може бути більшим за максимальний.",
+  "errors.filters.negative_price": "Ціна не може бути від'ємною.",
+
+
+
+  "pet": {
+    "select_species": "Оберіть вид тварини",
+    "select_breed": "Оберіть породу",
+    "select_coat_color": "Оберіть масть"
+
+  },
+  "species": {
+    "dog": "Собака",
+    "cat": "Кіт",
+    "rabbit": "Кролик",
+    "parrot": "Папуга"
+  },
+  "breed": {
+    "dog": {
+      "labrador": "Лабрадор",
+      "beagle": "Бігль",
+      "poodle": "Пудель",
+      "bulldog": "Бульдог",
+      "terrier": "Тер'єр",
+      "shiba": "Шіба-іну",
+      "husky": "Хаскі",
+      "dachshund": "Такса"
+    },
+    "cat": {
+      "persian": "Перська",
+      "siamese": "Сіамська",
+      "mainecoon": "Мейн-кун",
+      "sphynx": "Сфінкс",
+      "british": "Британська",
+      "bengal": "Бенгальська",
+      "scottish": "Шотландська",
+      "oriental": "Орієнтальна"
+    },
+    "rabbit": {
+      "lop": "Висловухий",
+      "dwarf": "Карликовий",
+      "rex": "Рекс",
+      "angora": "Ангора",
+      "flemish": "Фламандський",
+      "lionhead": "Левоголовий",
+      "silver": "Сріблястий",
+      "californian": "Каліфорнійський"
+    },
+    "parrot": {
+      "budgie": "Хвилястий папуга",
+      "cockatiel": "Корела",
+      "canary": "Канарейка",
+      "lovebird": "Неразлучник",
+      "finch": "Амадина",
+      "parrot": "Папуга",
+      "macaw": "Ара",
+      "cockatoo": "Какаду"
+    }
+  },
+  "coat": {
+    "dog": {
+      "black": "Чорний",
+      "white": "Білий",
+      "brown": "Коричневий",
+      "golden": "Золотистий",
+      "gray": "Сірий",
+      "spotted": "Плямистий",
+      "brindle": "Тигровий",
+      "tan": "Рудуватий"
+    },
+    "cat": {
+      "grey": "Сірий",
+      "orange": "Рудий",
+      "white": "Білий",
+      "black": "Чорний",
+      "calico": "Триколірний",
+      "tabby": "Смугастий",
+      "point": "З відмітинами",
+      "blue": "Блакитний"
+    },
+    "rabbit": {
+      "white": "Білий",
+      "grey": "Сірий",
+      "black": "Чорний",
+      "brown": "Коричневий",
+      "blue": "Блакитний",
+      "fawn": "Бежевий",
+      "chinchilla": "Шиншила",
+      "broken": "Плямистий"
+    },
+    "parrot": {
+      "green": "Зелений",
+      "yellow": "Жовтий",
+      "blue": "Синій",
+      "white": "Білий",
+      "grey": "Сірий",
+      "red": "Червоний",
+      "multicolor": "Різнобарвний",
+      "orange": "Помаранчевий"
+    }
+  },
+  "match": {
+    "age": "Вік",
+    "years": "р.",
+    "months": "міс.",
+    "age_hint": "Вік вказується у місяцях"
+  },
+
+  "petcard": {
+    "years": "{count} рік",
+    "years_plural": "{count} роки",
+    "years_plural_2": "{count} років",
+    "months": "{count} місяць",
+    "months_plural": "{count} місяці",
+    "months_plural_2": "{count} місяців"
+  }
 }
+
+

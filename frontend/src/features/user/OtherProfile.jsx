@@ -93,15 +93,42 @@ const PetReadonlyCard = ({ pet }) => {
     const { t } = useTranslation();
     const [openPreview, setOpenPreview] = useState(false);
 
-    return (
+    const getLocalizedAge = (months) => {
+        const years = Math.floor(months / 12);
+        const remainingMonths = months % 12;
 
+        const parts = [];
+        if (years > 0) parts.push(t("petcard.years", { count: years }));
+        if (remainingMonths > 0) parts.push(t("petcard.months", { count: remainingMonths }));
+
+        return parts.join(" ");
+    };
+
+    return (
         <div className="pet-card">
-            <p><strong>{t("petcard.species")}:</strong> {pet.species}</p>
-            <p><strong>{t("petcard.gender")}:</strong> {pet.gender}</p>
-            <p><strong>{t("petcard.breed")}:</strong> {pet.breed || t("match.unknown")}</p>
-            <p><strong>{t("petcard.color")}:</strong> {pet.coat_color || t("match.unknown")}</p>
-            <p><strong>{t("petcard.price")}:</strong> {pet.price || t("match.free")}</p>
-            <p><strong>{t("petcard.age")}:</strong> {pet.age} міс.</p>
+            <p>
+                <strong>{t("petcard.species")}:</strong>{" "}
+                {t(`species.${pet.species.toLowerCase()}`)}
+            </p>
+            <p>
+                <strong>{t("petcard.gender")}:</strong>{" "}
+                {t(`petcard.gender.${pet.gender.toLowerCase()}`)}
+            </p>
+            <p>
+                <strong>{t("petcard.breed")}:</strong>{" "}
+                {pet.breed ? t(`breed.${pet.species.toLowerCase()}.${pet.breed.toLowerCase()}`) : t("match.unknown")}
+            </p>
+            <p>
+                <strong>{t("petcard.color")}:</strong>{" "}
+                {pet.coat_color ? t(`coat.${pet.species.toLowerCase()}.${pet.coat_color.toLowerCase()}`) : t("match.unknown")}
+            </p>
+            <p>
+                <strong>{t("petcard.price")}:</strong>{" "}
+                {pet.price ? pet.price : t("match.free")}
+            </p>
+            <p>
+                <strong>{t("petcard.age")}:</strong> {getLocalizedAge(pet.age)}
+            </p>
 
             {pet.photos?.length > 0 && (
                 <>
